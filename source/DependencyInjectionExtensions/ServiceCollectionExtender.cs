@@ -20,7 +20,7 @@ namespace DependencyInjectionExtensions
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             //Execute normal add method first thus the registration can be overwritten by extender
-            object invoke = targetMethod.Invoke(_decorated, args);
+            var invoke = targetMethod.Invoke(_decorated, args);
 
             // ReSharper disable once InvertIf : Better readable
             if (targetMethod.Name.Equals(nameof(IServiceCollection.Add)))

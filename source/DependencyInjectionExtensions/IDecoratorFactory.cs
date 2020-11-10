@@ -14,5 +14,7 @@ namespace DependencyInjectionExtensions
 
         //To pass IServiceProvider is the service locator anti pattern. But we using it only at register time, so it should be ok
         object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider);
+
+        bool CanDecorate(Type decoratingType);
     }
 }

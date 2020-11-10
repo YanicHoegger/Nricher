@@ -7,4 +7,8 @@
     public class ObjectUnderTest : IObjectUnderTest
     {
     }
+
+    public class OtherObjectUnderTest : IObjectUnderTest
+    {
+    }
 }

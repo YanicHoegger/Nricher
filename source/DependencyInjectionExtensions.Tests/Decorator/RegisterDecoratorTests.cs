@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,9 +60,8 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         [Test]
         public void SameDecoratorTwiceOnlyOnceDecoratedTest()
         {
-            //DecoratorExtension.Temp +=DecoratorExtensionOnTemp;
-            //GivenCollectionWithOneDecoratorRegisteredTwice();
-            //WhenRegisterType();
+            GivenCollectionWithOneDecoratorRegisteredTwice();
+            WhenRegisterType();
             ThenOneDecoratedTwice();
         }
 
@@ -79,26 +77,16 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         public void SameServiceRegisteredReturnsBothServicesTest()
         {
             GivenCollectionWithOneDecorator();
+            WhenRegisterServiceTwice();
+            ThenReturnsBothServices();
         }
 
         [Test]
         public void RegisterSameServiceTwiceReturnsLastRegisteredTest()
         {
-
-        }
-
-        private void DecoratorExtensionOnTemp(IServiceCollection obj)
-        {
-            var sfsaf = obj.Select(x => PrintType(x.ServiceType)).ToList();
-
-            //TODO: I think this creates an infinit loop
-            var temp = obj.BuildServiceProvider()
-                .GetService<DecoratorContainer<IObjectUnderTest, DecoratorOneFactory>>();
-        }
-
-        private string PrintType(Type type)
-        {
-            return $"{type}<{string.Join(",", type.GenericTypeArguments.Select(x => x))}>";
+            GivenCollectionWithOneDecorator();
+            WhenRegisterServiceTwice();
+            ThenReturnsLastRegistered();
         }
 
         private IServiceCollection _serviceCollection;
@@ -138,6 +126,12 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         private void WhenRegisterType()
         {
             _serviceCollection.AddSingleton<IObjectUnderTest, ObjectUnderTest>();
+        }
+
+        private void WhenRegisterServiceTwice()
+        {
+            _serviceCollection.AddSingleton<IObjectUnderTest, ObjectUnderTest>();
+            _serviceCollection.AddSingleton<IObjectUnderTest, OtherObjectUnderTest>();
         }
 
         private void ThenOneDecorated()
@@ -186,6 +180,21 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         {
             var services = _serviceCollection.BuildServiceProvider().GetServices<IObjectUnderTest>();
             Assert.That(services.Count(), Is.EqualTo(1));
+        }
+
+        private void ThenReturnsBothServices()
+        {
+            var services = _serviceCollection.BuildServiceProvider().GetServices<IObjectUnderTest>().ToArray();
+            Assert.That(services.Length, Is.EqualTo(2));
+
+            Assert.IsInstanceOf<ObjectUnderTest>(GetDecoratedOf<DecoratorOne<IObjectUnderTest>, IObjectUnderTest>(services[0]));
+            Assert.IsInstanceOf<OtherObjectUnderTest>(GetDecoratedOf<DecoratorOne<IObjectUnderTest>, IObjectUnderTest>(services[1]));
+        }
+
+        private void ThenReturnsLastRegistered()
+        {
+            var service = _serviceCollection.BuildServiceProvider().GetService<IObjectUnderTest>();
+            Assert.IsInstanceOf<OtherObjectUnderTest>(GetDecoratedOf<DecoratorOne<IObjectUnderTest>, IObjectUnderTest>(service));
         }
     }
 }
