@@ -1,52 +1,55 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionExtensions
 {
-    public class ServiceCollectionExtender : DispatchProxy
+    public class ServiceCollectionExtender : IServiceCollection
     {
-        private IServiceCollection _decorated;
-        private IEnumerable<IServiceCollectionExtension> _extensions;
+        private readonly IServiceCollection _decorated;
+        private readonly IEnumerable<IServiceCollectionExtension> _extensions;
 
-        /// <summary>
-        /// Do not use this constructor. Use <see cref="Create"/> method for creation. This constructor is used for activator
-        /// </summary>
-        // ReSharper disable once EmptyConstructor : Needed for comment
-        public ServiceCollectionExtender()
-        {
-        }
-
-        protected override object Invoke(MethodInfo targetMethod, object[] args)
-        {
-            //Execute normal add method first thus the registration can be overwritten by extender
-            var invoke = targetMethod.Invoke(_decorated, args);
-
-            // ReSharper disable once InvertIf : Better readable
-            if (targetMethod.Name.Equals(nameof(IServiceCollection.Add)))
-            {
-                foreach (var extension in _extensions)
-                {
-                    extension.Extend(args[0] as ServiceDescriptor, _decorated);
-                }
-            }
-
-            return invoke;
-        }
-
-        public static IServiceCollection Create(IServiceCollection decorated, IEnumerable<IServiceCollectionExtension> serviceCollectionExtensions)
-        {
-            object proxy = Create<IServiceCollection, ServiceCollectionExtender>();
-
-            ((ServiceCollectionExtender)proxy).SetParameters(decorated, serviceCollectionExtensions);
-
-            return (IServiceCollection)proxy;
-        }
-
-        private void SetParameters(IServiceCollection decorated, IEnumerable<IServiceCollectionExtension> serviceCollectionExtensions)
+        public ServiceCollectionExtender(IServiceCollection decorated, IEnumerable<IServiceCollectionExtension> extensions)
         {
             _decorated = decorated;
-            _extensions = serviceCollectionExtensions;
+            _extensions = extensions;
+        }
+
+        public void Add(ServiceDescriptor item)
+        {
+            //Execute normal add method first thus the registration can be overwritten by extender
+            _decorated.Add(item);
+
+            foreach (var extension in _extensions)
+            {
+                extension.Extend(item, _decorated);
+            }
+        }
+
+        public IEnumerator<ServiceDescriptor> GetEnumerator() => _decorated.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void Clear() => _decorated.Clear();
+
+        public bool Contains(ServiceDescriptor item) => _decorated.Contains(item);
+
+        public void CopyTo(ServiceDescriptor[] array, int arrayIndex) => _decorated.CopyTo(array, arrayIndex);
+
+        public bool Remove(ServiceDescriptor item) => _decorated.Remove(item);
+
+        public int Count => _decorated.Count;
+        public bool IsReadOnly => _decorated.IsReadOnly;
+        public int IndexOf(ServiceDescriptor item) => _decorated.IndexOf(item);
+
+        public void Insert(int index, ServiceDescriptor item) => _decorated.Insert(index, item);
+
+        public void RemoveAt(int index) => _decorated.RemoveAt(index);
+
+        public ServiceDescriptor this[int index]
+        {
+            get => _decorated[index];
+            set => _decorated[index] = value;
         }
     }
 }

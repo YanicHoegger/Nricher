@@ -89,6 +89,22 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             ThenReturnsLastRegistered();
         }
 
+        [Test]
+        public void RegisterSingletonIsSingletonTest()
+        {
+            GivenCollectionWithOneDecorator();
+            WhenRegisterType();
+            ThenInstanceIsSingleton();
+        }
+
+        [Test]
+        public void RegisterTransientAreTransientTest()
+        {
+            GivenCollectionWithOneDecorator();
+            WhenRegisterTransient();
+            ThenInstancesAreTransient();
+        }
+
         private IServiceCollection _serviceCollection;
 
         private void GivenCollectionWithOneDecorator()
@@ -134,6 +150,11 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             _serviceCollection.AddSingleton<IObjectUnderTest, OtherObjectUnderTest>();
         }
 
+        private void WhenRegisterTransient()
+        {
+            _serviceCollection.AddTransient<IObjectUnderTest, ObjectUnderTest>();
+        }
+
         private void ThenOneDecorated()
         {
             var decorated = _serviceCollection.BuildServiceProvider().GetService<IObjectUnderTest>();
@@ -166,7 +187,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         private void CreateServiceCollection(IEnumerable<IServiceCollectionExtension> extensions)
         {
             var decorated = new ServiceCollection();
-            _serviceCollection = ServiceCollectionExtender.Create(decorated, extensions);
+            _serviceCollection = new ServiceCollectionExtender(decorated, extensions);
         }
 
         private static TDecorated GetDecoratedOf<TDecoratorBase, TDecorated>(object decorated)
@@ -195,6 +216,26 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         {
             var service = _serviceCollection.BuildServiceProvider().GetService<IObjectUnderTest>();
             Assert.IsInstanceOf<OtherObjectUnderTest>(GetDecoratedOf<DecoratorOne<IObjectUnderTest>, IObjectUnderTest>(service));
+        }
+
+        private void ThenInstanceIsSingleton()
+        {
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            var serviceOne = serviceProvider.GetService<IObjectUnderTest>();
+            var serviceTwo = serviceProvider.GetService<IObjectUnderTest>();
+
+            Assert.AreSame(serviceOne, serviceTwo);
+        }
+
+        private void ThenInstancesAreTransient()
+        {
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            var serviceOne = serviceProvider.GetService<IObjectUnderTest>();
+            var serviceTwo = serviceProvider.GetService<IObjectUnderTest>();
+
+            Assert.AreNotSame(serviceOne, serviceTwo);
         }
     }
 }

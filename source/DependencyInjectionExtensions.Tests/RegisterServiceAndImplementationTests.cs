@@ -71,7 +71,7 @@ namespace DependencyInjectionExtensions.Tests
             var decorated = new ServiceCollection();
             var singletonExtender = new NotTransientImplementationExtension();
 
-            _serviceCollection = ServiceCollectionExtender.Create(decorated, new[] { singletonExtender });
+            _serviceCollection = new ServiceCollectionExtender(decorated, new[] { singletonExtender });
         }
 
         private void WhenRegisterSingleton()

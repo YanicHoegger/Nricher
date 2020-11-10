@@ -73,7 +73,7 @@ namespace DependencyInjectionExtensions.Tests
             var decorated = new ServiceCollection();
             var hostedServiceExtension = new HostedServiceExtension();
 
-            _serviceCollection = ServiceCollectionExtender.Create(decorated, new []
+            _serviceCollection = new ServiceCollectionExtender(decorated, new []
             {
                 hostedServiceExtension
             });
