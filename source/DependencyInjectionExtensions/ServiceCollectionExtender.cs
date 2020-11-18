@@ -7,20 +7,26 @@ namespace DependencyInjectionExtensions
     public class ServiceCollectionExtender : IServiceCollection
     {
         private readonly IServiceCollection _decorated;
-        private readonly IEnumerable<IServiceCollectionExtension> _extensions;
 
         public ServiceCollectionExtender(IServiceCollection decorated, IEnumerable<IServiceCollectionExtension> extensions)
         {
             _decorated = decorated;
-            _extensions = extensions;
+            Extensions = extensions;
         }
 
+        public IEnumerable<IServiceCollectionExtension> Extensions { get; }
+
         public void Add(ServiceDescriptor item)
+        {
+            Add(item, Extensions);
+        }
+
+        public void Add(ServiceDescriptor item, IEnumerable<IServiceCollectionExtension> extensions)
         {
             //Execute normal add method first thus the registration can be overwritten by extender
             _decorated.Add(item);
 
-            foreach (var extension in _extensions)
+            foreach (var extension in extensions)
             {
                 extension.Extend(item, _decorated);
             }

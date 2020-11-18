@@ -49,7 +49,7 @@ namespace DependencyInjectionExtensions
                     alreadyRegisterDescriptor.Lifetime);
             }
 
-            ReplaceServiceDescriptor(newServiceDescriptor, serviceCollection);
+            ServiceCollectionHelper.ReplaceServiceDescriptor(newServiceDescriptor, serviceCollection);
         }
 
         /// <param name="implementationFactory"></param>
@@ -97,13 +97,6 @@ namespace DependencyInjectionExtensions
             var lambdaExpression = Expression.Lambda(callCreateDecorator, inputParameter);
 
             return (Func<IServiceProvider, object>)lambdaExpression.Compile();
-        }
-
-        private static void ReplaceServiceDescriptor(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
-        {
-            var toReplace = serviceCollection.Last(x => x.ServiceType == serviceDescriptor.ServiceType);
-            var index = serviceCollection.IndexOf(toReplace);
-            serviceCollection[index] = serviceDescriptor;
         }
     }
 }

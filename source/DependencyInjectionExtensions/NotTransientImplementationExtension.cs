@@ -5,7 +5,10 @@ namespace DependencyInjectionExtensions
     /// <summary>
     /// When register a service the implementation is not registered.
     /// But in some cases one need to access the implementation as well.
-    /// Then it should be the same instance if registered as not transient
+    /// Then it should be the same instance if registered as not transient.
+    /// 
+    /// This does not work if one is to add enumerable of the implementation type.
+    /// If this behavior is wanted, then use the <see cref="AddWithoutImplementationServiceCollectionExtensions"/> extension method
     /// </summary>
     public class NotTransientImplementationExtension : IServiceCollectionExtension
     {
@@ -33,12 +36,18 @@ namespace DependencyInjectionExtensions
         {
             var typeArguments = serviceDescriptor.ImplementationFactory.GetType().GenericTypeArguments;
 
+            if(typeArguments[1] == serviceDescriptor.ServiceType)
+                return;
+
             serviceCollection.Add(new ServiceDescriptor(typeArguments[1],
                 serviceDescriptor.ImplementationFactory,
                 serviceDescriptor.Lifetime));
 
-            serviceCollection.Add(new ServiceDescriptor(serviceDescriptor.ServiceType,
-                ReflectionHelper.CreateImplementationFactory(typeArguments[1]), serviceDescriptor.Lifetime));
+            var newServiceDescriptor = new ServiceDescriptor(serviceDescriptor.ServiceType,
+                ReflectionHelper.CreateImplementationFactory(typeArguments[1]), 
+                serviceDescriptor.Lifetime);
+
+            ServiceCollectionHelper.ReplaceServiceDescriptor(newServiceDescriptor, serviceCollection);
         }
 
         private static void AddWithType(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
@@ -49,7 +58,8 @@ namespace DependencyInjectionExtensions
 
             var factory = ReflectionHelper.CreateImplementationFactory(serviceDescriptor.ImplementationType);
 
-            serviceCollection.Add(new ServiceDescriptor(serviceDescriptor.ServiceType, factory, serviceDescriptor.Lifetime));
+            var newServiceDescriptor = new ServiceDescriptor(serviceDescriptor.ServiceType, factory, serviceDescriptor.Lifetime);
+            ServiceCollectionHelper.ReplaceServiceDescriptor(newServiceDescriptor, serviceCollection);
         }
     }
 }

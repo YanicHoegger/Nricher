@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.Decorator
 {
-    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
     public class RegisterDecoratorTests
     {
         [Test]
