@@ -8,62 +8,88 @@ namespace DependencyInjectionExtensions.Tests
     public class HostedServiceTests
     {
         [Test]
-        public void RegisterAsHostedServiceTest()
+        public void AddHostedServiceTest()
         {
             GivenCollection();
-            WhenRegisterImplementationService();
-            ThenHostedServiceRegistered();
+            WhenAddImplementationService();
+            ThenHostedServiceAdded();
         }
 
         [Test]
-        public void RegisterServiceTest()
+        public void AddServiceTest()
         {
             GivenCollection();
-            WhenRegisterService();
+            WhenAddService();
             ThenServiceAndHostedServiceAreSame<IObjectUnderTest>();
         }
 
         [Test]
-        public void RegisterInstanceTest()
+        public void AddInstanceTest()
         {
             GivenCollection();
-            WhenRegisterInstance();
-            ThenHostedServiceRegistered();
+            WhenAddInstance();
+            ThenHostedServiceAdded();
         }
 
         [Test]
-        public void RegisterInstanceAsServiceTest()
+        public void AddInstanceAsServiceTest()
         {
             GivenCollection();
-            WhenRegisterInstanceAsService();
-            ThenHostedServiceRegistered();
+            WhenAddInstanceAsService();
+            ThenHostedServiceAdded();
             ThenServiceAndHostedServiceAreSame<IObjectUnderTest>();
         }
 
         [Test]
-        public void RegisterImplementationFactoryTest()
+        public void AddImplementationFactoryTest()
         {
             GivenCollection();
-            WhenRegisterImplementationFactory();
-            ThenHostedServiceRegistered();
+            WhenAddImplementationFactory();
+            ThenHostedServiceAdded();
         }
 
         [Test]
-        public void RegisterImplementationFactoryAsServiceTest()
+        public void AddImplementationFactoryAsServiceTest()
         {
             GivenCollection();
-            WhenRegisterImplementationFactoryAsService();
-            ThenHostedServiceRegistered();
+            WhenAddImplementationFactoryAsService();
+            ThenHostedServiceAdded();
             ThenServiceAndHostedServiceAreSame<IObjectUnderTest>();
         }
 
         [Test]
-        public void RegisterHostedServiceTest()
+        public void HostedServiceAndServiceAreSameTest()
         {
             GivenCollection();
-            WhenRegisterHostedService();
-            ThenHostedServiceRegistered();
+            WhenAddHostedService();
+            ThenHostedServiceAdded();
             ThenServiceAndHostedServiceAreSame<IHostedServiceUnderTest>();
+        }
+
+        [Test]
+        public void AddServiceTwiceTest()
+        {
+            GivenCollection();
+            WhenAddService();
+            WhenAddDifferentImplementation();
+            ThenTwoServicesAdded();
+        }
+
+        [Test]
+        public void AddSameServiceTwiceTest()
+        {
+            GivenCollection();
+            WhenAddService();
+            WhenAddService();
+            ThenTwoServicesAdded();
+        }
+
+        [Test]
+        public void NothingNotNeededAddedTest()
+        {
+            GivenCollection();
+            WhenAddService();
+            ThenOnlyNeededAdded();
         }
 
         private IServiceCollection _serviceCollection;
@@ -79,42 +105,47 @@ namespace DependencyInjectionExtensions.Tests
             });
         }
 
-        private void WhenRegisterImplementationService()
+        private void WhenAddImplementationService()
         {
-            _serviceCollection.AddTransient<HostedObjectUnderTest>();
+            _serviceCollection.AddSingleton<HostedObjectUnderTest>();
         }
 
-        private void WhenRegisterService()
+        private void WhenAddService()
         {
             _serviceCollection.AddSingleton<IObjectUnderTest, HostedObjectUnderTest>();
         }
 
-        private void WhenRegisterInstance()
+        private void WhenAddInstance()
         {
             _serviceCollection.AddSingleton(new HostedObjectUnderTest());
         }
 
-        private void WhenRegisterInstanceAsService()
+        private void WhenAddInstanceAsService()
         {
             _serviceCollection.AddSingleton<IObjectUnderTest>(new HostedObjectUnderTest());
         }
 
-        private void WhenRegisterImplementationFactory()
+        private void WhenAddImplementationFactory()
         {
             _serviceCollection.AddSingleton(serviceProvider => new HostedObjectUnderTest());
         }
 
-        private void WhenRegisterImplementationFactoryAsService()
+        private void WhenAddImplementationFactoryAsService()
         {
             _serviceCollection.AddSingleton<IObjectUnderTest, HostedObjectUnderTest>(serviceProvider => new HostedObjectUnderTest());
         }
 
-        private void WhenRegisterHostedService()
+        private void WhenAddHostedService()
         {
             _serviceCollection.AddSingleton<IHostedServiceUnderTest, HostedServiceUnderTest>();
         }
 
-        private void ThenHostedServiceRegistered()
+        private void WhenAddDifferentImplementation()
+        {
+            _serviceCollection.AddSingleton<IObjectUnderTest, HostedServiceUnderTest>();
+        }
+
+        private void ThenHostedServiceAdded()
         {
             var serviceProvider = _serviceCollection.BuildServiceProvider();
 
@@ -128,6 +159,27 @@ namespace DependencyInjectionExtensions.Tests
 
             var hostedServices = serviceProvider.GetServices<IHostedService>();
             Assert.AreSame(serviceProvider.GetService<T>(), hostedServices.Single());
+        }
+
+        private void ThenTwoServicesAdded()
+        {
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            var hostedServices = serviceProvider.GetServices<IHostedService>().ToArray();
+            var hostedServiceUnderTests = serviceProvider.GetServices<IObjectUnderTest>().ToArray();
+
+            Assert.That(hostedServices.Count(), Is.EqualTo(2));
+            Assert.That(hostedServiceUnderTests.Count(), Is.EqualTo(2));
+
+            Assert.AreEqual(hostedServices[0], hostedServiceUnderTests[0]);
+            Assert.AreEqual(hostedServices[1], hostedServiceUnderTests[1]);
+        }
+
+        private void ThenOnlyNeededAdded()
+        {
+            Assert.That(_serviceCollection.Count, Is.EqualTo(2));
+            Assert.AreEqual(typeof(IObjectUnderTest), _serviceCollection[0].ServiceType);
+            Assert.AreEqual(typeof(IHostedService), _serviceCollection[1].ServiceType);
         }
     }
 }
