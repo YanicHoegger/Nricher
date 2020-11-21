@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DependencyInjectionExtensions.AddImplementation;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace DependencyInjectionExtensions.Tests
+namespace DependencyInjectionExtensions.Tests.AddImplementation
 {
     public class AddImplementationServiceCollectionExtensionsTests
     {

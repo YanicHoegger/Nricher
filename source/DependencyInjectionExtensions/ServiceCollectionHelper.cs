@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DependencyInjectionExtensions
 {
@@ -21,11 +20,13 @@ namespace DependencyInjectionExtensions
             {
                 return serviceDescriptor.ImplementationType;
             }
-            else if (serviceDescriptor.ImplementationInstance != null)
+
+            if (serviceDescriptor.ImplementationInstance != null)
             {
                 return serviceDescriptor.ImplementationInstance.GetType();
             }
-            else if (serviceDescriptor.ImplementationFactory != null)
+
+            if (serviceDescriptor.ImplementationFactory != null)
             {
                 var typeArguments = serviceDescriptor.ImplementationFactory.GetType().GenericTypeArguments;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using DependencyInjectionExtensions.Decorator;
 
 namespace DependencyInjectionExtensions.Tests.Decorator
 {

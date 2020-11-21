@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions
+namespace DependencyInjectionExtensions.AddImplementation
 {
     public static class AddImplementationServiceCollectionExtensions
     {
