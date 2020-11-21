@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DependencyInjectionExtensions.Decorator;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
