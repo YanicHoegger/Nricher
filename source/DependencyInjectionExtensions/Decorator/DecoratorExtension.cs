@@ -8,16 +8,16 @@ namespace DependencyInjectionExtensions.Decorator
 {
     public class DecoratorExtension : IServiceCollectionExtension
     {
-        private readonly IDecoratorFactory _decoratorFactory;
-
         public DecoratorExtension(IDecoratorFactory decoratorFactory)
         {
-            _decoratorFactory = decoratorFactory;
+            DecoratorFactory = decoratorFactory;
         }
+
+        public IDecoratorFactory DecoratorFactory { get; }
 
         public void Extend(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
-            if (!_decoratorFactory.CanDecorate(serviceDescriptor.ServiceType))
+            if (!DecoratorFactory.CanDecorate(serviceDescriptor.ServiceType))
                 return;
 
             //We need the already existent entry so we can decorate any number of times 
@@ -27,7 +27,7 @@ namespace DependencyInjectionExtensions.Decorator
             if (alreadyRegisterDescriptor.ImplementationInstance != null)
             {
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType,
-                    provider => _decoratorFactory.CreateDecorated(alreadyRegisterDescriptor.ImplementationInstance,
+                    provider => DecoratorFactory.CreateDecorated(alreadyRegisterDescriptor.ImplementationInstance,
                         alreadyRegisterDescriptor.ServiceType, provider),
                     alreadyRegisterDescriptor.Lifetime);
             }
@@ -54,7 +54,7 @@ namespace DependencyInjectionExtensions.Decorator
 
         /// <param name="implementationFactory"></param>
         /// <param name="serviceType"></param>
-        /// <returns>serviceProvider =&gt; <see cref="_decoratorFactory"/>.<see cref="IDecoratorFactory.CreateDecorated"/>(<paramref name="implementationFactory"/>(), <paramref name="serviceType"/>, serviceProvider)</returns>
+        /// <returns>serviceProvider =&gt; <see cref="DecoratorFactory"/>.<see cref="IDecoratorFactory.CreateDecorated"/>(<paramref name="implementationFactory"/>(), <paramref name="serviceType"/>, serviceProvider)</returns>
         private Func<IServiceProvider, object> CreateFromImplementationFactory(Func<IServiceProvider, object> implementationFactory, Type serviceType)
         {
             var inputParameter = Expression.Parameter(typeof(IServiceProvider), "serviceProvider");
@@ -64,7 +64,7 @@ namespace DependencyInjectionExtensions.Decorator
 
             var createDecoratorMethod = typeof(IDecoratorFactory).GetMethod(nameof(IDecoratorFactory.CreateDecorated));
             Debug.Assert(createDecoratorMethod != null, nameof(createDecoratorMethod) + " != null");
-            var callCreateDecorator = Expression.Call(Expression.Constant(_decoratorFactory),
+            var callCreateDecorator = Expression.Call(Expression.Constant(DecoratorFactory),
                 createDecoratorMethod,
                 invokedImplementationFactory,
                 Expression.Constant(serviceType),
@@ -77,7 +77,7 @@ namespace DependencyInjectionExtensions.Decorator
 
         /// <param name="implementationType"></param>
         /// <param name="serviceType"></param>
-        /// <returns>serviceProvider =&gt; <see cref="_decoratorFactory"/>.<see cref="IDecoratorFactory.CreateDecorated"/>(serviceProvider.GetService(<paramref name="implementationType"/>), <paramref name="serviceType"/>, serviceProvider)</returns>
+        /// <returns>serviceProvider =&gt; <see cref="DecoratorFactory"/>.<see cref="IDecoratorFactory.CreateDecorated"/>(serviceProvider.GetService(<paramref name="implementationType"/>), <paramref name="serviceType"/>, serviceProvider)</returns>
         private Func<IServiceProvider, object> CreateFromType(Type implementationType, Type serviceType)
         {
             var inputParameter = Expression.Parameter(typeof(IServiceProvider), "serviceProvider");
@@ -88,7 +88,7 @@ namespace DependencyInjectionExtensions.Decorator
 
             var createDecoratorMethod = typeof(IDecoratorFactory).GetMethod(nameof(IDecoratorFactory.CreateDecorated));
             Debug.Assert(createDecoratorMethod != null, nameof(createDecoratorMethod) + " != null");
-            var callCreateDecorator = Expression.Call(Expression.Constant(_decoratorFactory),
+            var callCreateDecorator = Expression.Call(Expression.Constant(DecoratorFactory),
                 createDecoratorMethod,
                 callImplementation,
                 Expression.Constant(serviceType),

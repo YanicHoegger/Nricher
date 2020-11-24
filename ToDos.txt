@@ -9,3 +9,5 @@
 - Decorator IHostedService
 - Decorator Logging
 - Decorator General
+
+- Extension methods for ServiceCollectionExtender

@@ -11,7 +11,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
     public class AddWithoutDecoratorServiceCollectionExtensionsTests : ExtensionMethodsTestsBase<SingleTypeDecoratorExtension<IObjectUnderTest, TestDecorator>>
     {
         [TestCaseSource(nameof(TestCaseData))]
-        public void NotAddImplementationTests(Expression<Action<IServiceCollection>> addServiceAction)
+        public void NotAddDecoratedTests(Expression<Action<IServiceCollection>> addServiceAction)
         {
             GivenServiceCollectionWithExtension();
             WhenAddService(addServiceAction);
@@ -19,7 +19,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
         }
 
         [TestCaseSource(nameof(TestCaseData))]
-        public void NotAddImplementationOnNormalServiceCollectionTests(Expression<Action<IServiceCollection>> addServiceAction)
+        public void NotAddDecoratedOnNormalServiceCollectionTests(Expression<Action<IServiceCollection>> addServiceAction)
         {
             GivenServiceCollectionWithoutExtension();
             WhenAddService(addServiceAction);
