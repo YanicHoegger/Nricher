@@ -1,0 +1,14 @@
+- Enable Nullable
+- Enable analyzers
+- Header with licens mark
+
+- Integration Tests (Multiple extensions together)
+
+- Multiple Service Decorator
+
+- Decorator IDisposable
+- Decorator IHostedService
+- Decorator Logging
+- Decorator General
+
+- Extension methods for ServiceCollectionExtender

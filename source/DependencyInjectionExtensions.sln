@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjectionExtensions", "DependencyInjectionExtensions\DependencyInjectionExtensions.csproj", "{EDA492E3-2BBC-4D15-9F29-F295BF06E3D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjectionExtensions.Tests", "DependencyInjectionExtensions.Tests\DependencyInjectionExtensions.Tests.csproj", "{008E230D-2FE3-4880-BFB7-39C1AFCBDAE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjectionExtensions.Tests", "DependencyInjectionExtensions.Tests\DependencyInjectionExtensions.Tests.csproj", "{008E230D-2FE3-4880-BFB7-39C1AFCBDAE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
