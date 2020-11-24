@@ -16,6 +16,9 @@ namespace DependencyInjectionExtensions.Tests.Decorator
 
         public bool CanDecorate(Type decoratingType)
         {
+            if (decoratingType == null) 
+                throw new ArgumentNullException(nameof(decoratingType));
+
             return decoratingType.IsInterface;
         }
 

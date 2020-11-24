@@ -17,6 +17,11 @@ namespace DependencyInjectionExtensions.Decorator
 
         public void Extend(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
+            if (serviceDescriptor == null) 
+                throw new ArgumentNullException(nameof(serviceDescriptor));
+            if (serviceCollection == null) 
+                throw new ArgumentNullException(nameof(serviceCollection));
+
             if (!DecoratorFactory.CanDecorate(serviceDescriptor.ServiceType))
                 return;
 

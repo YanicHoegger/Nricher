@@ -164,19 +164,23 @@ namespace DependencyInjectionExtensions.Tests.AddImplementation
 
         private void ThenImplementationAndInterfaceAreSameWithinScope()
         {
-            var scoped = GetServiceProvider().CreateScope().ServiceProvider;
+            using var serviceScope = GetServiceProvider().CreateScope();
+            var scoped = serviceScope.ServiceProvider;
 
             Assert.AreSame(scoped.GetService<IObjectUnderTest>(), scoped.GetService<ObjectUnderTest>());
         }
 
         private void ThenDifferentObjectsInScopes()
         {
-            var scopeOne = GetServiceProvider().CreateScope().ServiceProvider;
-            var scopeTwo = GetServiceProvider().CreateScope().ServiceProvider;
+            using var scopeOne = GetServiceProvider().CreateScope();
+            using var scopeTwo = GetServiceProvider().CreateScope();
 
-            Assert.AreNotSame(scopeOne.GetService<IObjectUnderTest>(), scopeTwo.GetService<IObjectUnderTest>());
-            Assert.AreNotSame(scopeOne.GetService<ObjectUnderTest>(), scopeTwo.GetService<ObjectUnderTest>());
-            Assert.AreNotSame(scopeOne.GetService<ObjectUnderTest>(), scopeTwo.GetService<IObjectUnderTest>());
+            var providerOne = scopeOne.ServiceProvider;
+            var providerTwo = scopeTwo.ServiceProvider;
+
+            Assert.AreNotSame(providerOne.GetService<IObjectUnderTest>(), providerTwo.GetService<IObjectUnderTest>());
+            Assert.AreNotSame(providerOne.GetService<ObjectUnderTest>(), providerTwo.GetService<ObjectUnderTest>());
+            Assert.AreNotSame(providerOne.GetService<ObjectUnderTest>(), providerTwo.GetService<IObjectUnderTest>());
         }
 
         private void ThenAddedIsSameAsInstance()

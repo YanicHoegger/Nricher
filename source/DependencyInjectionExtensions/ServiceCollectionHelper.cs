@@ -9,6 +9,11 @@ namespace DependencyInjectionExtensions
     {
         public static void ReplaceServiceDescriptor(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
+            if (serviceDescriptor == null) 
+                throw new ArgumentNullException(nameof(serviceDescriptor));
+            if (serviceCollection == null) 
+                throw new ArgumentNullException(nameof(serviceCollection));
+
             var toReplace = serviceCollection.Last(x => x.ServiceType == serviceDescriptor.ServiceType);
             var index = serviceCollection.IndexOf(toReplace);
             serviceCollection[index] = serviceDescriptor;
@@ -16,6 +21,9 @@ namespace DependencyInjectionExtensions
 
         public static Type GetImplementationType(this ServiceDescriptor serviceDescriptor)
         {
+            if (serviceDescriptor == null) 
+                throw new ArgumentNullException(nameof(serviceDescriptor));
+
             if (serviceDescriptor.ImplementationType != null)
             {
                 return serviceDescriptor.ImplementationType;

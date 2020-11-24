@@ -4,6 +4,7 @@
     {
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CA1801 // Review unused parameters
         // ReSharper disable UnusedMember.Local
         // ReSharper disable UnusedParameter.Local
         // ReSharper disable UnusedMember.Global
@@ -35,6 +36,7 @@
         // ReSharper restore UnusedParameter.Local
         // ReSharper restore UnusedMember.Local
         // ReSharper restore UnusedMember.Global
+#pragma warning restore CA1801 // Review unused parameters
 #pragma warning restore IDE0051 // Remove unused private members
 #pragma warning restore IDE0060 // Remove unused parameter
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionExtensions.AddImplementation
 {
@@ -14,6 +15,11 @@ namespace DependencyInjectionExtensions.AddImplementation
     {
         public void Extend(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
+            if (serviceDescriptor == null) 
+                throw new ArgumentNullException(nameof(serviceDescriptor));
+            if (serviceCollection == null) 
+                throw new ArgumentNullException(nameof(serviceCollection));
+
             if (serviceDescriptor.Lifetime.Equals(ServiceLifetime.Transient))
                 return;
 

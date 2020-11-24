@@ -13,17 +13,16 @@ namespace DependencyInjectionExtensions.Decorator
     public class SingleTypeDecoratorFactory<TService, TDecorator> : IDecoratorFactory
         where TDecorator : notnull, TService
     {
-        // ReSharper disable once StaticMemberInGenericType : Is wanted behavior here
-        private static readonly ConstructorInfo ConstructorInfo;
+        private readonly ConstructorInfo _constructorInfo;
 
-        static SingleTypeDecoratorFactory()
+        public SingleTypeDecoratorFactory()
         {
             var constructorInfos = typeof(TDecorator).GetConstructors(BindingFlags.Instance | BindingFlags.Public);
 
             if (constructorInfos.Length != 1)
                 throw new InvalidOperationException($"Decorators must have one public constructor. {typeof(TDecorator).Name} has {constructorInfos.Length}");
 
-            ConstructorInfo = constructorInfos.Single();
+            _constructorInfo = constructorInfos.Single();
         }
 
         public object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
@@ -34,7 +33,7 @@ namespace DependencyInjectionExtensions.Decorator
                 return parameterType == typeof(TService) ? toDecorate : serviceProvider.GetRequiredService(parameterType);
             }
 
-            var parameters = ConstructorInfo
+            var parameters = _constructorInfo
                 .GetParameters()
                 .Select(CreateParameter)
                 .ToArray();

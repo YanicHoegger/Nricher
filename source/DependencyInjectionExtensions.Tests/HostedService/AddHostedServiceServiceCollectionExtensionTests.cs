@@ -31,7 +31,7 @@ namespace DependencyInjectionExtensions.Tests.HostedService
         {
             x => x.AddSingletonHostedService<IObjectUnderTest, HostedObjectUnderTest>(),
             x => x.AddSingletonHostedService<IObjectUnderTest, HostedObjectUnderTest>(y => new HostedObjectUnderTest()),
-            x => x.AddSingletonHostedService<IObjectUnderTest, HostedObjectUnderTest>(new HostedObjectUnderTest()),
+            x => x.AddSingletonHostedService<IObjectUnderTest, HostedObjectUnderTest>(new HostedObjectUnderTest())
         };
 
         private void ThenHostedServiceAdded()
