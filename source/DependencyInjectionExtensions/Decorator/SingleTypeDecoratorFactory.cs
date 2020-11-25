@@ -38,7 +38,12 @@ namespace DependencyInjectionExtensions.Decorator
                 .Select(CreateParameter)
                 .ToArray();
 
-            return Activator.CreateInstance(typeof(TDecorator), parameters);
+            var decorated = Activator.CreateInstance(typeof(TDecorator), parameters);
+
+            if (decorated == null)
+                throw new InvalidOperationException($"Could not create instance of {typeof(TDecorator).Name}");
+
+            return decorated;
         }
 
         public bool CanDecorate(Type decoratingType)

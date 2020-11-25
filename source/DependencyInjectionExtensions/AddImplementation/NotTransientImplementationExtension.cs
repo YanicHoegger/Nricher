@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionExtensions.AddImplementation
@@ -40,7 +41,9 @@ namespace DependencyInjectionExtensions.AddImplementation
         private static void AddWithImplementationFactory(ServiceDescriptor serviceDescriptor,
             IServiceCollection serviceCollection)
         {
-            var typeArguments = serviceDescriptor.ImplementationFactory.GetType().GenericTypeArguments;
+            Debug.Assert(serviceDescriptor.ImplementationFactory != null, "serviceDescriptor.ImplementationFactory != null");
+
+            var typeArguments = serviceDescriptor.ImplementationFactory!.GetType().GenericTypeArguments;
 
             if(typeArguments[1] == serviceDescriptor.ServiceType)
                 return;
@@ -58,11 +61,13 @@ namespace DependencyInjectionExtensions.AddImplementation
 
         private static void AddWithType(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
-            serviceCollection.Add(new ServiceDescriptor(serviceDescriptor.ImplementationType,
-                serviceDescriptor.ImplementationType,
+            Debug.Assert(serviceDescriptor.ImplementationType != null, "serviceDescriptor.ImplementationType != null");
+
+            serviceCollection.Add(new ServiceDescriptor(serviceDescriptor.ImplementationType!,
+                serviceDescriptor.ImplementationType!,
                 serviceDescriptor.Lifetime));
 
-            var factory = ReflectionHelper.CreateImplementationFactory(serviceDescriptor.ImplementationType);
+            var factory = ReflectionHelper.CreateImplementationFactory(serviceDescriptor.ImplementationType!);
 
             var newServiceDescriptor = new ServiceDescriptor(serviceDescriptor.ServiceType, factory, serviceDescriptor.Lifetime);
             ServiceCollectionHelper.ReplaceServiceDescriptor(newServiceDescriptor, serviceCollection);

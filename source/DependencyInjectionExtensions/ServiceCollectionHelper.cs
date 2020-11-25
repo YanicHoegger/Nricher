@@ -34,6 +34,7 @@ namespace DependencyInjectionExtensions
                 return serviceDescriptor.ImplementationInstance.GetType();
             }
 
+            // ReSharper disable once InvertIf
             if (serviceDescriptor.ImplementationFactory != null)
             {
                 var typeArguments = serviceDescriptor.ImplementationFactory.GetType().GenericTypeArguments;
@@ -43,8 +44,7 @@ namespace DependencyInjectionExtensions
                 return typeArguments[1];
             }
 
-            Debug.Assert(false, "ImplementationType, ImplementationInstance or ImplementationFactory must be non null");
-            return null;
+            throw new InvalidOperationException($"ImplementationType, ImplementationInstance or ImplementationFactory of {nameof(serviceDescriptor)} must be non null");
         }
     }
 }

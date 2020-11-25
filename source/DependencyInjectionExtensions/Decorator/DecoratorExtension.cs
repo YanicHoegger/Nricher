@@ -44,13 +44,15 @@ namespace DependencyInjectionExtensions.Decorator
             }
             else
             {
+                Debug.Assert(alreadyRegisterDescriptor.ImplementationType != null, "alreadyRegisterDescriptor.ImplementationType != null");
+
                 if (serviceCollection.All(x => x.ServiceType != alreadyRegisterDescriptor.ImplementationType))
                 {
-                    serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.Lifetime));
+                    serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.Lifetime));
                 }
 
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType, 
-                    CreateFromType(alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.ServiceType), 
+                    CreateFromType(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ServiceType), 
                     alreadyRegisterDescriptor.Lifetime);
             }
 

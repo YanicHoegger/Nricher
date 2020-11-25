@@ -51,6 +51,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             var service = ServiceCollection.BuildServiceProvider().GetService<IObjectUnderTest>();
 
             Assert.IsInstanceOf<TestDecorator>(service);
+            // ReSharper disable once PossibleNullReferenceException : Is ok for a test
             var decorated = ((TestDecorator) service).Decorated;
 
             Assert.IsInstanceOf<ObjectUnderTest>(decorated);

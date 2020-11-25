@@ -154,7 +154,7 @@ namespace DependencyInjectionExtensions.Decorator
         }
 
         private static IDecoratorFactory CreateDecoratorFactory<TService, TDecorated>()
-            where TDecorated : TService
+            where TDecorated : notnull, TService
         {
             return new SingleTypeDecoratorFactory<TService, TDecorated>();
         }

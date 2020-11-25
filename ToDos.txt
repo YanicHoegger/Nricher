@@ -1,6 +1,3 @@
-- Enable Nullable
-- Enable analyzers
-
 - Integration Tests (Multiple extensions together)
 
 - Multiple Service Decorator
