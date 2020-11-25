@@ -11,6 +11,9 @@ namespace DependencyInjectionExtensions
             Action<IServiceCollection> addAction)
             where T : IServiceCollectionExtension
         {
+            if (addAction == null) 
+                throw new ArgumentNullException(nameof(addAction));
+
             if (serviceCollection is ServiceCollectionExtender extender && extender.Extensions.OfType<T>().Any())
             {
                 var filteredExtensions = extender.Extensions.Where(x => !(x is T));
@@ -26,6 +29,9 @@ namespace DependencyInjectionExtensions
             Action<IServiceCollection> addAction)
             where T : IServiceCollectionExtension, new()
         {
+            if (addAction == null) 
+                throw new ArgumentNullException(nameof(addAction));
+
             if (serviceCollection is ServiceCollectionExtender extender && extender.Extensions.OfType<T>().Any())
             {
                 addAction(serviceCollection);

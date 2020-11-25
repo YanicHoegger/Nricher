@@ -24,6 +24,9 @@ namespace DependencyInjectionExtensions.Tests
 
         protected void WhenAddService(Expression<Action<IServiceCollection>> addServiceAction)
         {
+            if (addServiceAction == null) 
+                throw new ArgumentNullException(nameof(addServiceAction));
+
             addServiceAction.Compile()(ServiceCollection);
         }
     }

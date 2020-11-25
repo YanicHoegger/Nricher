@@ -67,7 +67,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator.SingleTypeDecorator
         private void GivenServiceCollectionWithDecoratorThrows<T>()
             where T : IObjectUnderTest
         {
-            Assert.Throws<TypeInitializationException>(GivenServiceCollectionWithDecorator<T>);
+            Assert.Throws<InvalidOperationException>(GivenServiceCollectionWithDecorator<T>);
         }
 
         private void GivenServiceCollectionWithDecorators()

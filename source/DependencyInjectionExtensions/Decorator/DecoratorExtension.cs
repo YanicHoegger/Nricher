@@ -17,6 +17,11 @@ namespace DependencyInjectionExtensions.Decorator
 
         public void Extend(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
+            if (serviceDescriptor == null) 
+                throw new ArgumentNullException(nameof(serviceDescriptor));
+            if (serviceCollection == null) 
+                throw new ArgumentNullException(nameof(serviceCollection));
+
             if (!DecoratorFactory.CanDecorate(serviceDescriptor.ServiceType))
                 return;
 
@@ -39,13 +44,15 @@ namespace DependencyInjectionExtensions.Decorator
             }
             else
             {
+                Debug.Assert(alreadyRegisterDescriptor.ImplementationType != null, "alreadyRegisterDescriptor.ImplementationType != null");
+
                 if (serviceCollection.All(x => x.ServiceType != alreadyRegisterDescriptor.ImplementationType))
                 {
-                    serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.Lifetime));
+                    serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.Lifetime));
                 }
 
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType, 
-                    CreateFromType(alreadyRegisterDescriptor.ImplementationType, alreadyRegisterDescriptor.ServiceType), 
+                    CreateFromType(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ServiceType), 
                     alreadyRegisterDescriptor.Lifetime);
             }
 

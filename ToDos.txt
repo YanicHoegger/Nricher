@@ -1,7 +1,3 @@
-- Enable Nullable
-- Enable analyzers
-- Header with licens mark
-
 - Integration Tests (Multiple extensions together)
 
 - Multiple Service Decorator

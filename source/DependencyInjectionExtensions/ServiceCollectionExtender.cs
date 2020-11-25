@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,8 +11,8 @@ namespace DependencyInjectionExtensions
 
         public ServiceCollectionExtender(IServiceCollection decorated, IEnumerable<IServiceCollectionExtension> extensions)
         {
-            _decorated = decorated;
-            Extensions = extensions;
+            _decorated = decorated ?? throw new ArgumentNullException(nameof(decorated));
+            Extensions = extensions ?? throw new ArgumentNullException(nameof(extensions));
         }
 
         public IEnumerable<IServiceCollectionExtension> Extensions { get; }
@@ -23,6 +24,9 @@ namespace DependencyInjectionExtensions
 
         public void Add(ServiceDescriptor item, IEnumerable<IServiceCollectionExtension> extensions)
         {
+            if (extensions == null) 
+                throw new ArgumentNullException(nameof(extensions));
+
             //Execute normal add method first thus the registration can be overwritten by extender
             _decorated.Add(item);
 

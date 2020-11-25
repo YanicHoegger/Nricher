@@ -169,8 +169,8 @@ namespace DependencyInjectionExtensions.Tests.HostedService
             var hostedServices = serviceProvider.GetServices<IHostedService>().ToArray();
             var hostedServiceUnderTests = serviceProvider.GetServices<IObjectUnderTest>().ToArray();
 
-            Assert.That(hostedServices.Count(), Is.EqualTo(2));
-            Assert.That(hostedServiceUnderTests.Count(), Is.EqualTo(2));
+            Assert.That(hostedServices.Length, Is.EqualTo(2));
+            Assert.That(hostedServiceUnderTests.Length, Is.EqualTo(2));
 
             Assert.AreEqual(hostedServices[0], hostedServiceUnderTests[0]);
             Assert.AreEqual(hostedServices[1], hostedServiceUnderTests[1]);
