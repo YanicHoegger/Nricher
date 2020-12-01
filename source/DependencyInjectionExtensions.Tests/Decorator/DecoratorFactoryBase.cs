@@ -5,22 +5,18 @@ namespace DependencyInjectionExtensions.Tests.Decorator
 {
     public abstract class DecoratorFactoryBase : IDecoratorFactory
     {
-        public object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
+        public DecoratorResult CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
         {
-            return DecoratorType
-                       .MakeGenericType(decoratingType)
-                       .GetMethod(MethodName)
-                       ?.Invoke(null, new[] { toDecorate })
-                   ?? throw new InvalidOperationException($"Could not find method {MethodName} in {DecoratorType}");
+            var decorated = DecoratorType
+                                .MakeGenericType(decoratingType)
+                                .GetMethod(MethodName)
+                                ?.Invoke(null, new[] { toDecorate })
+                            ?? throw new InvalidOperationException($"Could not find method {MethodName} in {DecoratorType}");
+
+            return new DecoratorResult(decoratingType, decorated);
         }
 
-        public bool CanDecorate(Type decoratingType)
-        {
-            if (decoratingType == null) 
-                throw new ArgumentNullException(nameof(decoratingType));
-
-            return decoratingType.IsInterface;
-        }
+        public bool CanDecorate(Type decoratingType) => true;
 
         protected abstract Type DecoratorType { get; }
         protected abstract string MethodName { get; }

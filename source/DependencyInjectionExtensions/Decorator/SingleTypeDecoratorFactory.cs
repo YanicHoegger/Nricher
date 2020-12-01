@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionExtensions.Decorator
@@ -25,8 +26,10 @@ namespace DependencyInjectionExtensions.Decorator
             _constructorInfo = constructorInfos.Single();
         }
 
-        public object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
+        public DecoratorResult CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
         {
+            CheckInput(toDecorate, decoratingType, serviceProvider);
+
             object CreateParameter(ParameterInfo parameterInfo)
             {
                 var parameterType = parameterInfo.ParameterType;
@@ -43,12 +46,27 @@ namespace DependencyInjectionExtensions.Decorator
             if (decorated == null)
                 throw new InvalidOperationException($"Could not create instance of {typeof(TDecorator).Name}");
 
-            return decorated;
+            return new DecoratorResult(decoratingType, decorated);
         }
 
         public bool CanDecorate(Type decoratingType)
         {
             return typeof(TService) == decoratingType;
+        }
+
+        [AssertionMethod]
+        private static void CheckInput(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
+        {
+            if (toDecorate == null)
+                throw new ArgumentNullException(nameof(toDecorate));
+            if (decoratingType == null)
+                throw new ArgumentNullException(nameof(decoratingType));
+            if (serviceProvider == null)
+                throw new ArgumentNullException(nameof(serviceProvider));
+            if (decoratingType != typeof(TService))
+                throw new ArgumentException($"{nameof(decoratingType)} has to be {typeof(TService).Name}");
+            if (!(toDecorate is TService))
+                throw new ArgumentException($"{nameof(toDecorate)} has to be assignable to {typeof(TService).Name}");
         }
     }
 }
