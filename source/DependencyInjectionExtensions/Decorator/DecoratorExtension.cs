@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyInjectionExtensions.Decorator
@@ -17,9 +18,9 @@ namespace DependencyInjectionExtensions.Decorator
 
         public void Extend(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
-            if (serviceDescriptor == null) 
+            if (serviceDescriptor == null)
                 throw new ArgumentNullException(nameof(serviceDescriptor));
-            if (serviceCollection == null) 
+            if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
 
             if (!serviceDescriptor.ServiceType.IsInterface || !DecoratorFactory.CanDecorate(serviceDescriptor.ServiceType))
@@ -32,8 +33,8 @@ namespace DependencyInjectionExtensions.Decorator
             if (alreadyRegisterDescriptor.ImplementationInstance != null)
             {
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType,
-                    provider => DecoratorFactory.CreateDecorated(alreadyRegisterDescriptor.ImplementationInstance,
-                        alreadyRegisterDescriptor.ServiceType, provider).Decorated,
+                    provider => CreateDecorated(alreadyRegisterDescriptor.ImplementationInstance,
+                        alreadyRegisterDescriptor.ServiceType, provider),
                     alreadyRegisterDescriptor.Lifetime);
             }
             else if (alreadyRegisterDescriptor.ImplementationFactory != null)
@@ -52,8 +53,8 @@ namespace DependencyInjectionExtensions.Decorator
                     serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.Lifetime));
                 }
 
-                newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType, 
-                    CreateFromType(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ServiceType), 
+                newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType,
+                    CreateFromType(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ServiceType),
                     alreadyRegisterDescriptor.Lifetime);
             }
 
@@ -70,17 +71,14 @@ namespace DependencyInjectionExtensions.Decorator
             Expression<Func<IServiceProvider, object>> implementationFactoryExpression = provider => implementationFactory(provider);
             var invokedImplementationFactory = Expression.Invoke(implementationFactoryExpression, inputParameter);
 
-            var createDecoratorMethod = typeof(IDecoratorFactory).GetMethod(nameof(IDecoratorFactory.CreateDecorated));
-            Debug.Assert(createDecoratorMethod != null, nameof(createDecoratorMethod) + " != null");
-            var callCreateDecorator = Expression.Call(Expression.Constant(DecoratorFactory),
+            var createDecoratorMethod = typeof(DecoratorExtension).GetMethod(nameof(CreateDecorated), BindingFlags.NonPublic | BindingFlags.Instance);
+            var callCreateDecorator = Expression.Call(Expression.Constant(this),
                 createDecoratorMethod!,
                 invokedImplementationFactory,
                 Expression.Constant(serviceType),
                 inputParameter);
 
-            var getDecorated = GetPropertyExpression(callCreateDecorator);
-
-            var lambdaExpression = Expression.Lambda(getDecorated, inputParameter);
+            var lambdaExpression = Expression.Lambda(callCreateDecorator, inputParameter);
 
             return (Func<IServiceProvider, object>)lambdaExpression.Compile();
         }
@@ -96,27 +94,35 @@ namespace DependencyInjectionExtensions.Decorator
             Debug.Assert(getServiceMethod != null, nameof(getServiceMethod) + " != null");
             var callImplementation = Expression.Call(inputParameter, getServiceMethod!, Expression.Constant(implementationType));
 
-            var createDecoratorMethod = typeof(IDecoratorFactory).GetMethod(nameof(IDecoratorFactory.CreateDecorated));
-            Debug.Assert(createDecoratorMethod != null, nameof(createDecoratorMethod) + " != null");
-            var callCreateDecorator = Expression.Call(Expression.Constant(DecoratorFactory),
+            var createDecoratorMethod = typeof(DecoratorExtension).GetMethod(nameof(CreateDecorated), BindingFlags.NonPublic | BindingFlags.Instance);
+            var callCreateDecorator = Expression.Call(Expression.Constant(this),
                 createDecoratorMethod!,
                 callImplementation,
                 Expression.Constant(serviceType),
                 inputParameter);
 
-            var getDecorated = GetPropertyExpression(callCreateDecorator);
-
-            var lambdaExpression = Expression.Lambda(getDecorated, inputParameter);
+            var lambdaExpression = Expression.Lambda(callCreateDecorator, inputParameter);
 
             return (Func<IServiceProvider, object>)lambdaExpression.Compile();
         }
 
-        private static MemberExpression GetPropertyExpression(MethodCallExpression callCreateDecorator)
+        private object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
         {
-            var decoratedProperty = typeof(DecoratorResult).GetProperty(nameof(DecoratorResult.Decorated));
-            Debug.Assert(decoratedProperty != null, nameof(decoratedProperty) + " != null");
-            var getDecorated = Expression.Property(callCreateDecorator, decoratedProperty);
-            return getDecorated;
+            var decorated = DecoratorFactory.CreateDecorated(toDecorate, decoratingType, serviceProvider);
+
+            var interfaces = toDecorate.GetType().GetInterfaces();
+            var areImplemented = decorated.DecoratedType.GetInterfaces().Append(decorated.DecoratedType).ToList();
+            if (interfaces.All(x => areImplemented.Contains(x)))
+            {
+                return decorated.Decorated;
+            }
+
+            var dynamicType = DynamicInterfaceCreator.CreateDynamicInterface(interfaces, toDecorate.GetType().Name);
+
+            var methodInfo = typeof(InterfaceEnsurerDecorator).GetMethod(nameof(InterfaceEnsurerDecorator.Create));
+            Debug.Assert(methodInfo != null, nameof(methodInfo) + " != null");
+
+            return methodInfo.MakeGenericMethod(dynamicType, decorated.DecoratedType).Invoke(null, new[] { toDecorate, decorated.Decorated })!;
         }
     }
 }

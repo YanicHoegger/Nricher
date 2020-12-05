@@ -13,6 +13,7 @@ namespace DependencyInjectionExtensions.Decorator
         /// <returns>Decorated as implementation of <paramref name="decoratingType"/></returns>
 
         //To pass IServiceProvider is the service locator anti pattern. But we using it only at register time, so it should be ok
+        //TODO: Do we really need to tell which interface was implemented? We can figure that by reflection
         DecoratorResult CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider);
 
         bool CanDecorate(Type decoratingType);

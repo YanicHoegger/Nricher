@@ -21,7 +21,7 @@ namespace DependencyInjectionExtensions.Decorator
             return targetMethod.Invoke(obj, args);
         }
 
-        public static TService Create<TService, TDecorated>(TService service, TDecorated decorated)
+        public static TService Create<TService, TDecorated>(object service, TDecorated decorated)
             where TService : TDecorated
         {
             if(!typeof(TService).IsInterface)
@@ -33,12 +33,12 @@ namespace DependencyInjectionExtensions.Decorator
 
             Debug.Assert(proxy != null, nameof(proxy) + " != null");
 
-            ((InterfaceEnsurerDecorator)proxy).SetParameters(service, decorated);
+            ((InterfaceEnsurerDecorator)proxy).SetParameters<TService, TDecorated>(service, decorated);
 
             return (TService)proxy;
         }
 
-        private void SetParameters<TService, TDecorated>(TService service, TDecorated decorated)
+        private void SetParameters<TService, TDecorated>(object service, TDecorated decorated)
             where TService : TDecorated
         {
             _service = service;

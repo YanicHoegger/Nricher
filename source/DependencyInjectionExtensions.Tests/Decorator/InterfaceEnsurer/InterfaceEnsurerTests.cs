@@ -34,7 +34,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator.InterfaceEnsurer
 
         private void WhenEnsureInterface()
         {
-            _ensured = InterfaceEnsurerDecorator.Create(_original, _decorated);
+            _ensured = InterfaceEnsurerDecorator.Create<ICombined, IBaseInterface>(_original, _decorated);
         }
 
         private void DecoratorGetsCalledOnDecoratedInterface()
