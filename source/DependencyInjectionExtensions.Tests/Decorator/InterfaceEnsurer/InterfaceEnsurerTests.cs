@@ -29,17 +29,17 @@ namespace DependencyInjectionExtensions.Tests.Decorator.InterfaceEnsurer
         private void GivenDecoratorAndOriginal()
         {
             _original = new Combined();
-            _decorated = new Decorator();
+            _decorated = new DecoratorImplementation();
         }
 
         private void WhenEnsureInterface()
         {
-            _ensured = InterfaceEnsurerDecorator.Create<ICombined, IBaseInterface>(_original, _decorated);
+            _ensured = InterfaceEnsurerDecorator.Create<ICombined>(_original, _decorated);
         }
 
         private void DecoratorGetsCalledOnDecoratedInterface()
         {
-            Assert.AreEqual(Decorator.DecoratedReturnValue, _ensured.BaseCall);
+            Assert.AreEqual(DecoratorImplementation.DecoratedReturnValue, _ensured.BaseCall);
         }
 
         private void OriginalGetsCalledOnOriginalInterface()

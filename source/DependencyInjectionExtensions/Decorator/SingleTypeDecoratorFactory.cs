@@ -26,7 +26,7 @@ namespace DependencyInjectionExtensions.Decorator
             _constructorInfo = constructorInfos.Single();
         }
 
-        public DecoratorResult CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
+        public object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)
         {
             CheckInput(toDecorate, decoratingType, serviceProvider);
 
@@ -46,7 +46,7 @@ namespace DependencyInjectionExtensions.Decorator
             if (decorated == null)
                 throw new InvalidOperationException($"Could not create instance of {typeof(TDecorator).Name}");
 
-            return new DecoratorResult(decoratingType, decorated);
+            return decorated;
         }
 
         public bool CanDecorate(Type decoratingType)

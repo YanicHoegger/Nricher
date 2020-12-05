@@ -111,10 +111,10 @@ namespace DependencyInjectionExtensions.Decorator
             var decorated = DecoratorFactory.CreateDecorated(toDecorate, decoratingType, serviceProvider);
 
             var interfaces = toDecorate.GetType().GetInterfaces();
-            var areImplemented = decorated.DecoratedType.GetInterfaces().Append(decorated.DecoratedType).ToList();
+            var areImplemented = decorated.GetType().GetInterfaces().ToList();
             if (interfaces.All(x => areImplemented.Contains(x)))
             {
-                return decorated.Decorated;
+                return decorated;
             }
 
             var dynamicType = DynamicInterfaceCreator.CreateDynamicInterface(interfaces, toDecorate.GetType().Name);
@@ -122,7 +122,7 @@ namespace DependencyInjectionExtensions.Decorator
             var methodInfo = typeof(InterfaceEnsurerDecorator).GetMethod(nameof(InterfaceEnsurerDecorator.Create));
             Debug.Assert(methodInfo != null, nameof(methodInfo) + " != null");
 
-            return methodInfo.MakeGenericMethod(dynamicType, decorated.DecoratedType).Invoke(null, new[] { toDecorate, decorated.Decorated })!;
+            return methodInfo.MakeGenericMethod(dynamicType).Invoke(null, new[] { toDecorate, decorated })!;
         }
     }
 }

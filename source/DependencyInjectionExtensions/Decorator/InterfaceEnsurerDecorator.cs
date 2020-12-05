@@ -3,55 +3,57 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace DependencyInjectionExtensions.Decorator
 {
     public class InterfaceEnsurerDecorator : DispatchProxy
     {
-        private object? _service;
+        private object? _implementation;
         private object? _decorated;
-        private List<MemberInfo>? _serviceExclusiveMembers;
+        private List<MemberInfo>? _implementationExclusiveMembers;
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            if (targetMethod == null || _serviceExclusiveMembers == null)
+            if (targetMethod == null || _implementationExclusiveMembers == null)
                 return default;
 
-            var obj = _serviceExclusiveMembers.Contains(targetMethod) ? _service : _decorated;
+            var obj = _implementationExclusiveMembers.Contains(targetMethod) ? _implementation : _decorated;
             return targetMethod.Invoke(obj, args);
         }
 
-        public static TService Create<TService, TDecorated>(object service, TDecorated decorated)
-            where TService : TDecorated
+        public static T Create<T>([NotNull] object implementation, [NotNull] object decorated)
         {
-            if(!typeof(TService).IsInterface)
-                throw new ArgumentException($"{typeof(TService).Name} has to be an interface");
-            if (!typeof(TDecorated).IsInterface)
-                throw new ArgumentException($"{typeof(TDecorated).Name} has to be an interface");
+            if (implementation == null) 
+                throw new ArgumentNullException(nameof(implementation));
+            if (decorated == null) 
+                throw new ArgumentNullException(nameof(decorated));
+            if(!typeof(T).IsInterface)
+                throw new ArgumentException($"{typeof(T).Name} has to be an interface");
 
-            object? proxy = Create<TService, InterfaceEnsurerDecorator>();
+            object? proxy = Create<T, InterfaceEnsurerDecorator>();
 
             Debug.Assert(proxy != null, nameof(proxy) + " != null");
 
-            ((InterfaceEnsurerDecorator)proxy).SetParameters<TService, TDecorated>(service, decorated);
+            ((InterfaceEnsurerDecorator)proxy).SetParameters<T>(implementation, decorated);
 
-            return (TService)proxy;
+            return (T)proxy;
         }
 
-        private void SetParameters<TService, TDecorated>(object service, TDecorated decorated)
-            where TService : TDecorated
+        private void SetParameters<T>(object service, object decorated)
         {
-            _service = service;
+            _implementation = service;
             _decorated = decorated;
 
-            var decoratedInterfaces = FlattenInterfaces(typeof(TDecorated)).ToList();
-            var serviceExclusiveInterfaces = FlattenInterfaces(typeof(TService)).Where(x => !decoratedInterfaces.Contains(x));
-            _serviceExclusiveMembers = serviceExclusiveInterfaces.SelectMany(x => x.GetMembers()).ToList();
+            _implementationExclusiveMembers = CreateImplementationExclusiveMembers<T>(decorated);
         }
 
-        private static IEnumerable<Type> FlattenInterfaces(Type t)
+        private static List<MemberInfo> CreateImplementationExclusiveMembers<T>(object decorated)
         {
-            return t.GetInterfaces().Append(t);
+            var decoratedInterfaces = decorated.GetType().GetInterfaces().ToList();
+            var serviceExclusiveInterfaces = typeof(T).GetInterfaces().Append(typeof(T)).Where(x => !decoratedInterfaces.Contains(x));
+
+            return serviceExclusiveInterfaces.SelectMany(x => x.GetMembers()).ToList();
         }
     }
 }
