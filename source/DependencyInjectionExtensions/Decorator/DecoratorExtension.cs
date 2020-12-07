@@ -47,14 +47,11 @@ namespace DependencyInjectionExtensions.Decorator
             {
                 Debug.Assert(alreadyRegisterDescriptor.ImplementationType != null, "alreadyRegisterDescriptor.ImplementationType != null");
 
-                //TODO: Do not add an existing service type since it can mess up what gets later registered
-                if (serviceCollection.All(x => x.ServiceType != alreadyRegisterDescriptor.ImplementationType))
-                {
-                    serviceCollection.Add(new ServiceDescriptor(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.Lifetime));
-                }
+                var implementationType = DynamicTypeCreator.CreateInheritedType(alreadyRegisterDescriptor.ImplementationType);
+                serviceCollection.Add(new ServiceDescriptor(implementationType, implementationType, alreadyRegisterDescriptor.Lifetime));
 
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType,
-                    CreateFromType(alreadyRegisterDescriptor.ImplementationType!, alreadyRegisterDescriptor.ServiceType),
+                    CreateFromType(implementationType, alreadyRegisterDescriptor.ServiceType),
                     alreadyRegisterDescriptor.Lifetime);
             }
 
@@ -117,7 +114,7 @@ namespace DependencyInjectionExtensions.Decorator
                 return decorated;
             }
 
-            var dynamicType = DynamicInterfaceCreator.CreateDynamicInterface(interfaces, toDecorate.GetType().Name);
+            var dynamicType = DynamicTypeCreator.CreateDynamicInterface(interfaces, toDecorate.GetType().Name);
 
             var methodInfo = typeof(InterfaceEnsurerDecorator).GetMethod(nameof(InterfaceEnsurerDecorator.Create));
             Debug.Assert(methodInfo != null, nameof(methodInfo) + " != null");

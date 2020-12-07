@@ -104,6 +104,16 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             ThenInstancesAreTransient();
         }
 
+        [Test]
+        public void AddDecoratorDoesNotAddImplementation()
+        {
+            GivenCollectionWithOneDecorator();
+            WhenAddType();
+            ThenImplementationNotAdded();
+        }
+
+        #region Private Members
+
         private IServiceCollection _serviceCollection;
 
         private void GivenCollectionWithOneDecorator()
@@ -224,6 +234,11 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             Assert.AreNotSame(serviceOne, serviceTwo);
         }
 
+        private void ThenImplementationNotAdded()
+        {
+            Assert.IsNull(_serviceCollection.BuildServiceProvider().GetService<ObjectUnderTest>());
+        }
+
         private static TDecorated GetDecoratedOf<TDecoratorBase, TDecorated>(object decorated)
             where TDecoratorBase : DecoratorBase<TDecorated>
         {
@@ -236,5 +251,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
             var decorated = new ServiceCollection();
             _serviceCollection = new ServiceCollectionExtender(decorated, extensions);
         }
+
+        #endregion
     }
 }
