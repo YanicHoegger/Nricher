@@ -1,7 +1,5 @@
 - Integration Tests (Multiple extensions together)
 
-- Multiple Service Decorator
-
 - Decorator IDisposable
 - Decorator IHostedService
 - Decorator Logging

@@ -14,13 +14,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
                    ?? throw new InvalidOperationException($"Could not find method {MethodName} in {DecoratorType}");
         }
 
-        public bool CanDecorate(Type decoratingType)
-        {
-            if (decoratingType == null) 
-                throw new ArgumentNullException(nameof(decoratingType));
-
-            return decoratingType.IsInterface;
-        }
+        public bool CanDecorate(Type decoratingType) => true;
 
         protected abstract Type DecoratorType { get; }
         protected abstract string MethodName { get; }
