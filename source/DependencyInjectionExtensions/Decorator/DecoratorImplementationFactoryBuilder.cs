@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace DependencyInjectionExtensions.Decorator
 {
-    public class DecoratorImplementationFactoryFactory
+    public class DecoratorImplementationFactoryBuilder
     {
         private readonly IDecoratorFactory _decoratorFactory;
 
-        public DecoratorImplementationFactoryFactory(IDecoratorFactory decoratorFactory)
+        public DecoratorImplementationFactoryBuilder(IDecoratorFactory decoratorFactory)
         {
             _decoratorFactory = decoratorFactory;
         }
@@ -27,7 +27,7 @@ namespace DependencyInjectionExtensions.Decorator
             Expression<Func<IServiceProvider, object>> implementationFactoryExpression = provider => implementationFactory(provider);
             var invokedImplementationFactory = Expression.Invoke(implementationFactoryExpression, inputParameter);
 
-            var createDecoratorMethod = typeof(DecoratorImplementationFactoryFactory).GetMethod(nameof(CreateDecorated), BindingFlags.NonPublic | BindingFlags.Instance);
+            var createDecoratorMethod = typeof(DecoratorImplementationFactoryBuilder).GetMethod(nameof(CreateDecorated), BindingFlags.NonPublic | BindingFlags.Instance);
             var callCreateDecorator = Expression.Call(Expression.Constant(this),
                 createDecoratorMethod!,
                 invokedImplementationFactory,
