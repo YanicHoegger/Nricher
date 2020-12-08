@@ -47,8 +47,19 @@ namespace DependencyInjectionExtensions.Decorator
             {
                 Debug.Assert(alreadyRegisterDescriptor.ImplementationType != null, "alreadyRegisterDescriptor.ImplementationType != null");
 
-                var implementationType = DynamicTypeCreator.CreateInheritedType(alreadyRegisterDescriptor.ImplementationType);
-                serviceCollection.Add(new ServiceDescriptor(implementationType, implementationType, alreadyRegisterDescriptor.Lifetime));
+                Type implementationType;
+                if (alreadyRegisterDescriptor.ImplementationType.IsSealed)
+                {
+                    if(serviceCollection.All(x => x.ServiceType != alreadyRegisterDescriptor.ImplementationType))
+                        throw new InvalidOperationException($"Sealed type {alreadyRegisterDescriptor.ImplementationType.Name} need to be added to the service collection");
+
+                    implementationType = alreadyRegisterDescriptor.ImplementationType;
+                }
+                else
+                {
+                    implementationType = DynamicTypeCreator.CreateInheritedType(alreadyRegisterDescriptor.ImplementationType);
+                    serviceCollection.Add(new ServiceDescriptor(implementationType, implementationType, alreadyRegisterDescriptor.Lifetime));
+                }
 
                 newServiceDescriptor = new ServiceDescriptor(alreadyRegisterDescriptor.ServiceType,
                     CreateFromType(implementationType, alreadyRegisterDescriptor.ServiceType),

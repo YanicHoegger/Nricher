@@ -83,7 +83,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
 
         private void GivenPrivateConstructorType()
         {
-            _originalType = typeof(PrivateConstructorTest);
+            _originalType = typeof(PrivateConstructorClass);
         }
 
         private void GivenEmptyConstructorType()
