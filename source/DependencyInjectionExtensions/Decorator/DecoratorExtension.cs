@@ -7,12 +7,12 @@ namespace DependencyInjectionExtensions.Decorator
 {
     public class DecoratorExtension : IServiceCollectionExtension
     {
-        private readonly ImplementationFactoryFactory _factory;
+        private readonly DecoratorImplementationFactoryFactory _factory;
 
         public DecoratorExtension(IDecoratorFactory decoratorFactory)
         {
             DecoratorFactory = decoratorFactory;
-            _factory = new ImplementationFactoryFactory(decoratorFactory);
+            _factory = new DecoratorImplementationFactoryFactory(decoratorFactory);
         }
 
         public IDecoratorFactory DecoratorFactory { get; }
