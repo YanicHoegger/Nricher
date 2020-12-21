@@ -39,7 +39,7 @@ namespace DependencyInjectionExtensions.HostedService
             Type type, 
             IServiceCollection serviceCollection)
         {
-            var implementationFactoryBuilder = new ImplementationFactoryBuilder(serviceDescriptor.ServiceType, type, serviceCollection);
+            var implementationFactoryBuilder = new ImplementationFactoryBuilder(serviceDescriptor.ServiceType, serviceCollection);
             var factory = implementationFactoryBuilder.CreateImplementationFactory();
 
             return new ServiceDescriptor(_hostedServiceType, factory, ServiceLifetime.Singleton);

@@ -10,15 +10,16 @@ namespace DependencyInjectionExtensions.Decorator
     public class InterfaceEnsurerDecorator : DispatchProxy
     {
         private object? _implementation;
-        private object? _decorated;
         private List<MemberInfo>? _implementationExclusiveMembers;
+
+        internal object? Decorated { get; private set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
             if (targetMethod == null || _implementationExclusiveMembers == null)
                 return default;
 
-            var obj = _implementationExclusiveMembers.Contains(targetMethod) ? _implementation : _decorated;
+            var obj = _implementationExclusiveMembers.Contains(targetMethod) ? _implementation : Decorated;
             return targetMethod.Invoke(obj, args);
         }
 
@@ -43,7 +44,7 @@ namespace DependencyInjectionExtensions.Decorator
         private void SetParameters<T>(object service, object decorated)
         {
             _implementation = service;
-            _decorated = decorated;
+            Decorated = decorated;
 
             _implementationExclusiveMembers = CreateImplementationExclusiveMembers<T>(decorated);
         }

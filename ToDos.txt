@@ -1,8 +1,12 @@
-- Integration Tests (Multiple extensions together)
-
 - Decorator IDisposable
 - Decorator IHostedService
 - Decorator Logging
 - Decorator General
 
+- Extension that checks that only implementations are not abstract or interface
+
 - Extension methods for ServiceCollectionExtender
+
+- Unit Test for different implementations of Microsoft.Extensions.DependencyInjection.Abstractions
+
+- Unify nullable behavior
