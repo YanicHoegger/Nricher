@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Decorators
 {
@@ -31,8 +32,28 @@ namespace Decorators
             try
             {
                 _logger.LogDebug($"Enter method {targetMethod.Name}");
+
                 var result = targetMethod.Invoke(_decorated, args);
-                _logger.LogDebug($"Leaving method {targetMethod.Name}");
+
+                if (result is Task asyncResult)
+                {
+                    _ = asyncResult.ContinueWith(task =>
+                    {
+                        if (task.Exception != null)
+                        {
+                            LogException(targetMethod, task.Exception);
+                        }
+                        else
+                        {
+                            LogLeaving(targetMethod);
+                        }
+                    }, TaskScheduler.Default);
+                }
+                else
+                {
+                    LogLeaving(targetMethod);
+                }
+
 
                 return result;
             }
@@ -41,13 +62,23 @@ namespace Decorators
                 var innerException = e.InnerException;
                 if (innerException != null)
                 {
-                    _logger.LogError($"Method {targetMethod.Name} threw exception:{Environment.NewLine}{innerException.Message}");
+                    LogException(targetMethod, innerException);
                     throw innerException;
                 }
 
-                _logger.LogError($"Method {targetMethod.Name} threw exception:{Environment.NewLine}{e.Message}");
+                LogException(targetMethod, e);
                 throw;
             }
+        }
+
+        private void LogException(MemberInfo targetMethod, Exception exception)
+        {
+            _logger.LogError($"Method {targetMethod.Name} threw exception:{Environment.NewLine}{exception.Message}");
+        }
+
+        private void LogLeaving(MemberInfo targetMethod)
+        {
+            _logger.LogDebug($"Leaving method {targetMethod.Name}");
         }
 
         private void SetParameters(T decorated, ILogger<T> logger)
