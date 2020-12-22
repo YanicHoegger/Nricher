@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 
-[assembly: InternalsVisibleTo("DependencyInjectionExtensions.Tests")]
-namespace DependencyInjectionExtensions.Decorator
+namespace DynamicTypeHelpers
 {
     //Need to be static since we can not create the same type twice
-    //We use this to call DispatchProxyGenerator which has a static Dictionary of types
-    internal static class DynamicTypeCreator
+    public static class DynamicTypeCreator
     {
         private static readonly ModuleBuilder ModuleBuilder = CreateModuleBuilder();
         private static readonly Dictionary<List<Type>, Type> AlreadyCreatedInterfaceTypes = new Dictionary<List<Type>, Type>(new ListComparer<Type>());
@@ -22,9 +19,23 @@ namespace DependencyInjectionExtensions.Decorator
         {
             var interfacesList = interfaces.OrderBy(x => x.FullName).ToList();
 
+            var umbrellaInterface = interfacesList.FirstOrDefault(x => interfacesList.Where(y => y != x).All(y => y.IsAssignableFrom(x)));
+            if (umbrellaInterface != null)
+                return umbrellaInterface;
+
             if (AlreadyCreatedInterfaceTypes.ContainsKey(interfacesList))
                 return AlreadyCreatedInterfaceTypes[interfacesList];
 
+            var dynamicInterface = CreateDynamicInterfaceInternal(typeName, interfacesList);
+            Debug.Assert(dynamicInterface != null, nameof(dynamicInterface) + " != null");
+
+            AlreadyCreatedInterfaceTypes[interfacesList] = dynamicInterface;
+
+            return dynamicInterface;
+        }
+
+        private static Type? CreateDynamicInterfaceInternal(string typeName, IEnumerable<Type> interfacesList)
+        {
             var typeBuilder = ModuleBuilder.DefineType($"{typeName}InterfaceProxy",
                 TypeAttributes.Interface | TypeAttributes.Abstract | TypeAttributes.Public);
 
@@ -33,12 +44,7 @@ namespace DependencyInjectionExtensions.Decorator
                 typeBuilder.AddInterfaceImplementation(@interface);
             }
 
-            var dynamicInterface = typeBuilder.CreateType();
-            Debug.Assert(dynamicInterface != null, nameof(dynamicInterface) + " != null");
-
-            AlreadyCreatedInterfaceTypes[interfacesList] = dynamicInterface;
-
-            return dynamicInterface;
+            return typeBuilder.CreateType();
         }
 
         public static Type CreateInheritedType([NotNull] Type type)
@@ -48,7 +54,7 @@ namespace DependencyInjectionExtensions.Decorator
             if (AlreadyCreatedInheritanceTypes.ContainsKey(type))
                 return AlreadyCreatedInheritanceTypes[type];
 
-            var typeBuilder = ModuleBuilder.DefineType($"{type.Name}InheritanceProxy",TypeAttributes.Class | TypeAttributes.Public, type);
+            var typeBuilder = ModuleBuilder.DefineType($"{type.Name}InheritanceProxy", TypeAttributes.Class | TypeAttributes.Public, type);
 
             DefineConstructor(typeBuilder, type);
 

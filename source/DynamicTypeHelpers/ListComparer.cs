@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace DynamicTypeHelpers
 {
     public class ListComparer<T> : IEqualityComparer<List<T>>
     {

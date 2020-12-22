@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
+using DynamicTypeHelpers.Tests.TestClasses;
 using NUnit.Framework;
 
-namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
+namespace DynamicTypeHelpers.Tests
 {
     public class DynamicInheritedTypeTests
     {
@@ -98,7 +99,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
 
         private void WhenCreate()
         {
-            _createdType = DependencyInjectionExtensions.Decorator.DynamicTypeCreator.CreateInheritedType(_originalType);
+            _createdType = DynamicTypeCreator.CreateInheritedType(_originalType);
         }
 
         private void WhenCreateThenThrow()

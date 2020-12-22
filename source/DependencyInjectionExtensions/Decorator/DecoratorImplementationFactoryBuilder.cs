@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using DynamicTypeHelpers;
 
 namespace DependencyInjectionExtensions.Decorator
 {
@@ -41,7 +42,13 @@ namespace DependencyInjectionExtensions.Decorator
 
         public Func<IServiceProvider, object> CreateFromType(Type implementationType, Type serviceType)
         {
-            return CreateFromImplementationFactory(provider => provider.GetService(implementationType), serviceType);
+            object ImplementationFactory(IServiceProvider provider)
+            {
+                return provider.GetService(implementationType) ??
+                       throw new InvalidOperationException($"Could not find service of type {implementationType}");
+            }
+
+            return CreateFromImplementationFactory(ImplementationFactory, serviceType);
         }
 
         private object CreateDecorated(object toDecorate, Type decoratingType, IServiceProvider serviceProvider)

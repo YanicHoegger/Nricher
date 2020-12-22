@@ -1,4 +1,3 @@
-- Decorator IDisposable
 - Decorator IHostedService
 - Decorator Logging
 - Decorator General
@@ -10,3 +9,5 @@
 - Unit Test for different implementations of Microsoft.Extensions.DependencyInjection.Abstractions
 
 - Unify nullable behavior
+
+- Renaming
