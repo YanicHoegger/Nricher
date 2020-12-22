@@ -39,30 +39,30 @@ namespace Decorators.Tests
             ThenAsyncExceptionLogged();
         }
 
-        private ILoggingTestMock _loggingTestMock;
-        private LoggerMock<ILoggingTestMock> _loggerMock;
+        private ITestObject _testObject;
+        private LoggerMock<ITestObject> _loggerMock;
 
         private void GivenTestObject()
         {
-            _loggerMock = new LoggerMock<ILoggingTestMock>();
-            _loggingTestMock = LoggingDecorator<ILoggingTestMock>.Create(new LoggingTestMock(), _loggerMock);
+            _loggerMock = new LoggerMock<ITestObject>();
+            _testObject = LoggingDecorator<ITestObject>.Create(new TestObject(), _loggerMock);
         }
 
         private void WhenExecuteMethod()
         {
-            _loggingTestMock.TestMethod();
+            _testObject.TestMethod();
         }
 
         private void WhenExecuteAsyncMethod()
         {
-            _loggingTestMock.AsyncMethod();
+            _testObject.AsyncMethod();
         }
 
         private void WhenExecuteWithException()
         {
             try
             {
-                _loggingTestMock.ThrowingMethod();
+                _testObject.ThrowingMethod();
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception)
@@ -74,7 +74,7 @@ namespace Decorators.Tests
 
         private void WhenExceptionInAsyncMethod()
         {
-            _loggingTestMock.ExceptionInAsyncMethod();
+            _testObject.ExceptionInAsyncMethod();
             while (_loggerMock.Logged.Count() < 4)
             {
             }
@@ -88,28 +88,28 @@ namespace Decorators.Tests
 
         private void ThenExceptionLogged()
         {
-            CollectionAssert.Contains(_loggerMock.Logged, $"Method {nameof(ILoggingTestMock.ThrowingMethod)} threw exception:{Environment.NewLine}{LoggingTestMock.ErrorMessage}");
+            CollectionAssert.Contains(_loggerMock.Logged, $"Method {nameof(ITestObject.ThrowingMethod)} threw exception:{Environment.NewLine}{TestObject.ErrorMessage}");
         }
 
         private void ThenLoggedLeaveAfterFinished()
         {
             Assert.AreEqual(1, _loggerMock.Logged.Count());
 
-            _loggingTestMock.FinishAsyncMethod();
+            _testObject.FinishAsyncMethod();
             while (_loggerMock.Logged.Count() < 4)
             {
             }
 
-            CollectionAssert.Contains(_loggerMock.Logged, $"Leaving method {nameof(ILoggingTestMock.AsyncMethod)}");
+            CollectionAssert.Contains(_loggerMock.Logged, $"Leaving method {nameof(ITestObject.AsyncMethod)}");
         }
 
 
         private void ThenAsyncExceptionLogged()
         {
-            Assert.IsTrue(_loggerMock.Logged.Last().Contains($"Method {nameof(ILoggingTestMock.AsyncMethod)} threw exception"));
+            Assert.IsTrue(_loggerMock.Logged.Last().Contains($"Method {nameof(ITestObject.AsyncMethod)} threw exception"));
         }
 
 
-        private static string MethodName => nameof(ILoggingTestMock.TestMethod);
+        private static string MethodName => nameof(ITestObject.TestMethod);
     }
 }

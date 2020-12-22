@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Decorators.Tests
 {
-    public interface ILoggingTestMock
+    public interface ITestObject
     {
         void TestMethod();
         void ThrowingMethod();
@@ -13,7 +13,7 @@ namespace Decorators.Tests
         void ExceptionInAsyncMethod();
     }
 
-    public class LoggingTestMock : ILoggingTestMock
+    public class TestObject : ITestObject
     {
         private bool _asyncFinished;
         private bool _throwException;

@@ -10,21 +10,27 @@ namespace Decorators
     {
         private T? _decorated;
         private ILogger<T>? _logger;
+        private TaskScheduler? _loggingScheduler;
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
         public static T Create(T decorated, ILogger<T> logger)
+        {
+            return Create(decorated, logger, TaskScheduler.Default);
+        }
+
+        public static T Create(T decorated, ILogger<T> logger, TaskScheduler taskScheduler)
 #pragma warning restore CA1000 // Do not declare static members on generic types
         {
             object proxy = Create<T, LoggingDecorator<T>>();
 
-            ((LoggingDecorator<T>)proxy).SetParameters(decorated, logger);
+            ((LoggingDecorator<T>)proxy).SetParameters(decorated, logger, taskScheduler);
 
             return (T)proxy;
         }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            if(_decorated is null || _logger is null)
+            if(_decorated is null || _logger is null || _loggingScheduler is null)
                 throw new InvalidOperationException($"Objects need to be created with {nameof(Create)} method");
             if (targetMethod is null)
                 return null;
@@ -47,7 +53,7 @@ namespace Decorators
                         {
                             LogLeaving(targetMethod);
                         }
-                    }, TaskScheduler.Default);
+                    }, _loggingScheduler);
                 }
                 else
                 {
@@ -81,10 +87,11 @@ namespace Decorators
             _logger.LogDebug($"Leaving method {targetMethod.Name}");
         }
 
-        private void SetParameters(T decorated, ILogger<T> logger)
+        private void SetParameters(T decorated, ILogger<T> logger, TaskScheduler taskScheduler)
         {
             _decorated = decorated;
             _logger = logger;
+            _loggingScheduler = taskScheduler;
         }
     }
 }

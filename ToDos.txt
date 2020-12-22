@@ -1,5 +1,5 @@
-- Decorator General
-- Filter possibility for decoration
+- Filter possibility for decorating methods
+- Possible refactor for decorators
 
 - Extension that checks that only implementations are not abstract or interface
 
