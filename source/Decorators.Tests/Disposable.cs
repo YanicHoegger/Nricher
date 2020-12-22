@@ -3,11 +3,6 @@ using System;
 
 namespace Decorators.Tests
 {
-    public interface ISomeAction
-    {
-        void SomeAction();
-    }
-
     public class Disposable : ISomeAction, IDisposable
     {
         public void SomeAction()

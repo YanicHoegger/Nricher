@@ -1,4 +1,3 @@
-- Decorator IHostedService
 - Decorator Logging
 - Decorator General
 
@@ -11,3 +10,5 @@
 - Unify nullable behavior
 
 - Renaming
+
+- Examples
