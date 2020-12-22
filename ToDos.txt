@@ -1,5 +1,5 @@
-- Decorator Logging
 - Decorator General
+- Filter possibility for decoration
 
 - Extension that checks that only implementations are not abstract or interface
 
