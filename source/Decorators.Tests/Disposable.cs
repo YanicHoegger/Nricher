@@ -1,11 +1,16 @@
-﻿
-using System;
+﻿using System;
 
 namespace Decorators.Tests
 {
     public class Disposable : ISomeAction, IDisposable
     {
         public void SomeAction()
+        {
+            //Nothing to do here
+        }
+
+        [NotDecorated]
+        public void NotDecoratedAction()
         {
             //Nothing to do here
         }

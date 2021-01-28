@@ -32,6 +32,14 @@ namespace Decorators.Tests
             ThenThrowsWhenCallingMethod();
         }
 
+        [Test]
+        public void WhenNotStartedThenNotThrowsWhenNotDecoratedTest()
+        {
+            GivenDecorated();
+            WhenNotStarted();
+            ThenDoesNotThrowWhenCallingNotDecoratedMethod();
+        }
+
         private object _decorated;
 
         private void GivenDecorated()
@@ -62,6 +70,11 @@ namespace Decorators.Tests
         private void ThenDoesNotThrowWhenCallingMethod()
         {
             CallingMethod();
+        }
+
+        private void ThenDoesNotThrowWhenCallingNotDecoratedMethod()
+        {
+            ((ISomeAction)_decorated).NotDecoratedAction();
         }
 
         private void CallingMethod()

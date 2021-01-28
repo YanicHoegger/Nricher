@@ -14,6 +14,7 @@ namespace DynamicTypeHelpers
                 return false;
             if (y is null) 
                 return false;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (x.GetType() != y.GetType()) 
                 return false;
 

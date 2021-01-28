@@ -1,3 +1,5 @@
+- Move ToDos to GitHub
+
 - Filter possibility for decorating methods
 - Possible refactor for decorators
 
@@ -6,6 +8,7 @@
 - Extension methods for ServiceCollectionExtender
 
 - Unit Test for different implementations of Microsoft.Extensions.DependencyInjection.Abstractions
+- Unit Test for different .net frameworks
 
 - Unify nullable behavior
 

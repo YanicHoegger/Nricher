@@ -20,5 +20,11 @@ namespace Decorators.Tests
         {
             //Nothing to do here
         }
+
+        [NotDecorated]
+        public void NotDecoratedAction()
+        {
+            //Nothing to do here
+        }
     }
 }

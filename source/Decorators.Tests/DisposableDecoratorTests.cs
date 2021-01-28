@@ -21,6 +21,15 @@ namespace Decorators.Tests
             ThenDoesNotThrowWhenCallingMethod();
         }
 
+        [Test]
+        //TODO: Check for multiple decorations when using attribute
+        public void DoExecuteWhenNotDecoratedTest()
+        {
+            GivenDecorated();
+            WhenDispose();
+            ThenDoesNotThrowWhenCallingNotDecoratedMethod();
+        }
+
         private object _decorated;
 
         private void GivenDecorated()
@@ -48,6 +57,11 @@ namespace Decorators.Tests
         private void ThenDoesNotThrowWhenCallingMethod()
         {
             ((ISomeAction) _decorated).SomeAction();
+        }
+
+        private void ThenDoesNotThrowWhenCallingNotDecoratedMethod()
+        {
+            ((ISomeAction)_decorated).NotDecoratedAction();
         }
     }
 }
