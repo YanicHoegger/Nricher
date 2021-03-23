@@ -6,7 +6,6 @@ using System.Reflection;
 namespace Decorators
 {
     public class NotDecoratedAttributeChecker<T>
-        where T : class
     {
         private readonly object _decorated;
 

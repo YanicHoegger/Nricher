@@ -49,6 +49,7 @@ namespace DependencyInjectionExtensions.Decorator
                 Type implementationType;
                 if (alreadyRegisterDescriptor.ImplementationType.IsSealed)
                 {
+                    // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
                     if(serviceCollection.All(x => x.ServiceType != alreadyRegisterDescriptor.ImplementationType))
                         throw new InvalidOperationException($"Sealed type {alreadyRegisterDescriptor.ImplementationType.Name} need to be added to the service collection");
 
@@ -56,7 +57,7 @@ namespace DependencyInjectionExtensions.Decorator
                 }
                 else
                 {
-                    implementationType = DynamicTypeCreator.CreateInheritedType(alreadyRegisterDescriptor.ImplementationType);
+                    implementationType = DynamicInheritedTypeCreator.CreateInheritedType(alreadyRegisterDescriptor.ImplementationType);
                     serviceCollection.Add(new ServiceDescriptor(implementationType, implementationType, alreadyRegisterDescriptor.Lifetime));
                 }
 

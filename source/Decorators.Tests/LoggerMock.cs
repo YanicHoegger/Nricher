@@ -7,7 +7,7 @@ namespace Decorators.Tests
 {
     public class LoggerMock<T> : ILogger<T>
     {
-        private readonly List<string> _logged = new List<string>();
+        private readonly List<string> _logged = new();
 
         public IEnumerable<string> Logged => _logged;
 

@@ -9,43 +9,9 @@ using System.Reflection.Emit;
 namespace DynamicTypeHelpers
 {
     //Need to be static since we can not create the same type twice
-    public static class DynamicTypeCreator
+    public static class DynamicInheritedTypeCreator
     {
-        private static readonly ModuleBuilder ModuleBuilder = CreateModuleBuilder();
-        private static readonly Dictionary<List<Type>, Type> AlreadyCreatedInterfaceTypes = new Dictionary<List<Type>, Type>(new ListComparer<Type>());
-        private static readonly Dictionary<Type, Type> AlreadyCreatedInheritanceTypes = new Dictionary<Type, Type>();
-
-        public static Type CreateDynamicInterface(IEnumerable<Type> interfaces, string typeName)
-        {
-            var interfacesList = interfaces.OrderBy(x => x.FullName).ToList();
-
-            var umbrellaInterface = interfacesList.FirstOrDefault(x => interfacesList.Where(y => y != x).All(y => y.IsAssignableFrom(x)));
-            if (umbrellaInterface != null)
-                return umbrellaInterface;
-
-            if (AlreadyCreatedInterfaceTypes.ContainsKey(interfacesList))
-                return AlreadyCreatedInterfaceTypes[interfacesList];
-
-            var dynamicInterface = CreateDynamicInterfaceInternal(typeName, interfacesList);
-            Debug.Assert(dynamicInterface != null, nameof(dynamicInterface) + " != null");
-
-            AlreadyCreatedInterfaceTypes[interfacesList] = dynamicInterface;
-
-            return dynamicInterface;
-        }
-
-        private static Type? CreateDynamicInterfaceInternal(string typeName, IEnumerable<Type> interfacesList)
-        {
-            var typeBuilder = ModuleBuilder.DefineType($"{typeName}InterfaceProxy",
-                TypeAttributes.Interface | TypeAttributes.Abstract | TypeAttributes.Public);
-
-            foreach (var @interface in interfacesList)
-            {
-                typeBuilder.AddInterfaceImplementation(@interface);
-            }
-
-            return typeBuilder.CreateType();
-        }
+        private static readonly Dictionary<Type, Type> AlreadyCreatedInheritanceTypes = new();
 
         public static Type CreateInheritedType([NotNull] Type type)
         {
@@ -54,7 +20,7 @@ namespace DynamicTypeHelpers
             if (AlreadyCreatedInheritanceTypes.ContainsKey(type))
                 return AlreadyCreatedInheritanceTypes[type];
 
-            var typeBuilder = ModuleBuilder.DefineType($"{type.Name}InheritanceProxy", TypeAttributes.Class | TypeAttributes.Public, type);
+            var typeBuilder = ModuleBuilderCreator.ModuleBuilder.DefineType($"{type.Name}InheritanceProxy", TypeAttributes.Class | TypeAttributes.Public, type);
 
             DefineConstructor(typeBuilder, type);
 
@@ -106,15 +72,6 @@ namespace DynamicTypeHelpers
                 throw new ArgumentException($"Type {type.Name} can not have multiple public constructors");
 
             return constructors.Single(x => x.IsPublic);
-        }
-
-        private static ModuleBuilder CreateModuleBuilder()
-        {
-            var currentAssemblyName = typeof(DynamicTypeCreator).Assembly.GetName().Name;
-            var assemblyName = new AssemblyName($"{currentAssemblyName}Proxies");
-            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-
-            return assemblyBuilder.DefineDynamicModule($"{assemblyName}ModuleBuilder");
         }
     }
 }

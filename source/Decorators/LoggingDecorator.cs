@@ -5,41 +5,40 @@ using System.Threading.Tasks;
 
 namespace Decorators
 {
-    public class LoggingDecorator<T> : DispatchProxy
+    public class LoggingDecorator<T> : DecoratorBase<LoggingDecorator<T>>
         where T : class
     {
-        private T? _decorated;
         private ILogger<T>? _logger;
         private TaskScheduler? _loggingScheduler;
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
-        public static T Create(T decorated, ILogger<T> logger)
+        public static T Create(T toDecorate, ILogger<T> logger)
         {
-            return Create(decorated, logger, TaskScheduler.Default);
+            return Create(toDecorate, logger, TaskScheduler.Default);
         }
 
-        public static T Create(T decorated, ILogger<T> logger, TaskScheduler taskScheduler)
+        public static T Create(T toDecorate, ILogger<T> logger, TaskScheduler taskScheduler)
 #pragma warning restore CA1000 // Do not declare static members on generic types
         {
-            object proxy = Create<T, LoggingDecorator<T>>();
+            var proxy = CreateDecorator<LoggingDecorator<T>>(toDecorate);
 
-            ((LoggingDecorator<T>)proxy).SetParameters(decorated, logger, taskScheduler);
+            proxy.SetParameters(logger, taskScheduler);
 
-            return (T)proxy;
+            return Cast<T>(proxy);
         }
 
-        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        protected override object? InvokeInternal(MethodInfo targetMethod, object?[]? args)
         {
-            if(_decorated is null || _logger is null || _loggingScheduler is null)
-                throw new InvalidOperationException($"Objects need to be created with {nameof(Create)} method");
-            if (targetMethod is null)
-                return null;
+            if (_logger is null || _loggingScheduler is null)
+                throw GetWrongCreationException();
 
             try
             {
+#pragma warning disable CA1062 // Validate arguments of public methods : Is checked in base class
                 _logger.LogDebug($"Enter method {targetMethod.Name}");
+#pragma warning restore CA1062 // Validate arguments of public methods
 
-                var result = targetMethod.Invoke(_decorated, args);
+                var result = targetMethod.Invoke(Decorated, args);
 
                 if (result is Task asyncResult)
                 {
@@ -87,9 +86,8 @@ namespace Decorators
             _logger.LogDebug($"Leaving method {targetMethod.Name}");
         }
 
-        private void SetParameters(T decorated, ILogger<T> logger, TaskScheduler taskScheduler)
+        private void SetParameters(ILogger<T> logger, TaskScheduler taskScheduler)
         {
-            _decorated = decorated;
             _logger = logger;
             _loggingScheduler = taskScheduler;
         }

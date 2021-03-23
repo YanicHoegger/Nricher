@@ -2,6 +2,7 @@
 
 namespace Decorators
 {
+    //TODO: Create test for multiple decorations when using attribute
     [AttributeUsage(AttributeTargets.Method|AttributeTargets.Property)]
     public class NotDecoratedAttribute : Attribute
     {

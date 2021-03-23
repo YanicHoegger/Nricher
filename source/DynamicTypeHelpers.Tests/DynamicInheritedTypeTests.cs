@@ -59,6 +59,8 @@ namespace DynamicTypeHelpers.Tests
             ThenMultipleParameterConstructorCanBeActivated();
         }
 
+        //TODO: Create same type twice test
+
         private Type _originalType;
         private Type _createdType;
 
@@ -99,7 +101,7 @@ namespace DynamicTypeHelpers.Tests
 
         private void WhenCreate()
         {
-            _createdType = DynamicTypeCreator.CreateInheritedType(_originalType);
+            _createdType = DynamicInheritedTypeCreator.CreateInheritedType(_originalType);
         }
 
         private void WhenCreateThenThrow()

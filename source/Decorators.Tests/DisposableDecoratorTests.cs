@@ -22,7 +22,6 @@ namespace Decorators.Tests
         }
 
         [Test]
-        //TODO: Check for multiple decorations when using attribute
         public void DoExecuteWhenNotDecoratedTest()
         {
             GivenDecorated();

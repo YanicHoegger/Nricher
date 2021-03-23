@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace DynamicTypeHelpers.Tests
 {
-    public class DynamicInterfaceTests
+    public class DynamicKeepInterfaceTypeCreatorTests
     {
         [Test]
         public void CreatedTypeImplementsAllInterfaces()
@@ -23,6 +23,8 @@ namespace DynamicTypeHelpers.Tests
             ThenResultingTypeIsUmbrellaInterface();
         }
 
+        //TODO: Create same type twice test
+
         private IEnumerable<Type> _interfaces;
         private Type _dynamicInterface;
 
@@ -38,7 +40,7 @@ namespace DynamicTypeHelpers.Tests
 
         private void WhenCreateDynamicInterface()
         {
-            _dynamicInterface = DynamicTypeCreator.CreateDynamicInterface(_interfaces, nameof(Umbrella));
+            _dynamicInterface = DynamicKeepInterfaceTypeCreator.Create(_interfaces, nameof(Umbrella));
         }
 
         private void ThenAllInterfacesImplemented()

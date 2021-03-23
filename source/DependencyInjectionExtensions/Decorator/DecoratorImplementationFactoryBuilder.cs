@@ -62,7 +62,7 @@ namespace DependencyInjectionExtensions.Decorator
                 return decorated;
             }
 
-            var dynamicType = DynamicTypeCreator.CreateDynamicInterface(interfaces, toDecorate.GetType().Name);
+            var dynamicType = DynamicKeepInterfaceTypeCreator.Create(interfaces, toDecorate.GetType().Name);
 
             var methodInfo = typeof(InterfaceEnsurerDecorator).GetMethod(nameof(InterfaceEnsurerDecorator.Create));
             Debug.Assert(methodInfo != null, nameof(methodInfo) + " != null");
