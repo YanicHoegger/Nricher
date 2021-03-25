@@ -6,7 +6,12 @@ using JetBrains.Annotations;
 
 namespace Decorators
 {
-    public abstract class DecoratorBase<T> : DispatchProxy
+    public abstract class DecoratorBase : DispatchProxy
+    {
+        public abstract object Decorated { get; }
+    }
+
+    public abstract class DecoratorBase<T> : DecoratorBase
     {
         private object? _decorated;
         private NotDecoratedAttributeChecker<T>? _notDecoratedAttributeChecker;
@@ -43,12 +48,12 @@ namespace Decorators
             var proxy =  (TDecorator)methodInfo.MakeGenericMethod(@interface, typeof(TDecorator)).Invoke(null, Array.Empty<object>())!;
 
             proxy._decorated = toDecorate ?? throw new ArgumentNullException(nameof(toDecorate));
-            proxy._notDecoratedAttributeChecker = new NotDecoratedAttributeChecker<T>(toDecorate);
+            proxy._notDecoratedAttributeChecker = new NotDecoratedAttributeChecker<T>(proxy.GetCascadedDecorated());
 
             return proxy;
         }
 
-        protected object Decorated => _decorated ?? throw GetWrongCreationException();
+        public override object Decorated => _decorated ?? throw GetWrongCreationException();
 
         protected InvalidOperationException GetWrongCreationException() => new("Object can not be used when created with default constructor, use static creation instead");
 
@@ -58,6 +63,16 @@ namespace Decorators
         protected static TCast Cast<TCast>(object toCast)
         {
             return (TCast) toCast;
+        }
+
+        private object GetCascadedDecorated()
+        {
+            var cascaded = Decorated;
+            for (; cascaded is DecoratorBase decorator; cascaded = decorator.Decorated)
+            {
+            }
+
+            return cascaded;
         }
     }
 }
