@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using DynamicTypeHelpers;
 using JetBrains.Annotations;
@@ -24,13 +26,15 @@ namespace Decorators
                 return null;
 
             // ReSharper disable once ConvertIfStatementToReturnStatement
-            if (_notDecoratedAttributeChecker.IsFiltered(targetMethod))
+            if (_notDecoratedAttributeChecker.IsFiltered(targetMethod) || IgnoringMethods.Any(x => x.SameMethod(targetMethod)))
             {
                 return targetMethod.Invoke(_decorated, args);
             }
 
             return InvokeInternal(targetMethod, args);
         }
+
+        public List<MethodInfo> IgnoringMethods { get; } = new();
 
         protected abstract object? InvokeInternal(MethodInfo targetMethod, object?[]? args);
 

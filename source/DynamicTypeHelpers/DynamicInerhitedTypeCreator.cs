@@ -11,6 +11,7 @@ namespace DynamicTypeHelpers
     //Need to be static since we can not create the same type twice
     public static class DynamicInheritedTypeCreator
     {
+        //TODO: Needs a lock for multi threading
         private static readonly Dictionary<Type, Type> AlreadyCreatedInheritanceTypes = new();
 
         public static Type CreateInheritedType([NotNull] Type type)

@@ -9,13 +9,11 @@ namespace Decorators.Tests
         void ThrowingMethod();
 
         Task AsyncMethod();
-        void FinishAsyncMethod();
         void ExceptionInAsyncMethod();
     }
 
     public class TestObject : ITestObject
     {
-        private bool _asyncFinished;
         private bool _throwException;
 
         public void TestMethod()
@@ -35,25 +33,13 @@ namespace Decorators.Tests
             return Task.Run(AsyncMethodInternal);
         }
 
-        public void FinishAsyncMethod()
-        {
-            _asyncFinished = true;
-        }
-
         public void ExceptionInAsyncMethod()
         {
             _throwException = true;
-            _asyncFinished = true;
         }
 
         private void AsyncMethodInternal()
         {
-            _asyncFinished = false;
-
-            while (!_asyncFinished)
-            {
-            }
-
             if (_throwException)
             {
                 throw new Exception(ErrorMessage);

@@ -9,6 +9,13 @@ namespace Decorators
     {
         private bool _isStarted;
 
+        public HostedServiceDecorator()
+        {
+            var disposeMethod = typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose)) 
+                                ?? throw new InvalidOperationException($"{nameof(IDisposable.Dispose)} method can not be found");
+            IgnoringMethods.Add(disposeMethod);
+        }
+
         protected override object? InvokeInternal(MethodInfo targetMethod, object?[]? args)
         {
             if (targetMethod == null) 

@@ -7,16 +7,14 @@ namespace Decorators.Tests
 {
     public class LoggerMock<T> : ILogger<T>
     {
-        private readonly List<string> _logged = new();
-
-        public IEnumerable<string> Logged => _logged;
+        public List<string> Logged { get; } = new();
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, [NotNull] Func<TState, Exception, string> formatter)
         {
             if (formatter == null) 
                 throw new ArgumentNullException(nameof(formatter));
 
-            _logged.Add(formatter(state, exception));
+            Logged.Add(formatter(state, exception));
         }
 
         public bool IsEnabled(LogLevel logLevel) => true;

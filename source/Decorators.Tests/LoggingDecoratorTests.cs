@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Decorators.Tests
@@ -23,19 +24,19 @@ namespace Decorators.Tests
         }
 
         [Test]
-        public void LoggingLeaveAfterAsyncFinished()
+        public async Task LoggingLeaveAfterAsyncFinished()
         {
             GivenTestObject();
-            WhenExecuteAsyncMethod();
+            await WhenExecuteAsyncMethod().ConfigureAwait(false);
             ThenLoggedLeaveAfterFinished();
         }
 
         [Test]
-        public void LoggingExceptionInAsyncMethodTest()
+        public async Task LoggingExceptionInAsyncMethodTest()
         {
             GivenTestObject();
-            WhenExecuteAsyncMethod();
             WhenExceptionInAsyncMethod();
+            await WhenExecuteAsyncMethod().ConfigureAwait(false);
             ThenAsyncExceptionLogged();
         }
 
@@ -53,9 +54,9 @@ namespace Decorators.Tests
             _testObject.TestMethod();
         }
 
-        private void WhenExecuteAsyncMethod()
+        private async Task WhenExecuteAsyncMethod()
         {
-            _testObject.AsyncMethod();
+            await _testObject.AsyncMethod().ConfigureAwait(false);
         }
 
         private void WhenExecuteWithException()
@@ -75,9 +76,6 @@ namespace Decorators.Tests
         private void WhenExceptionInAsyncMethod()
         {
             _testObject.ExceptionInAsyncMethod();
-            while (_loggerMock.Logged.Count() < 4)
-            {
-            }
         }
 
         private void ThenLogged()
@@ -93,22 +91,14 @@ namespace Decorators.Tests
 
         private void ThenLoggedLeaveAfterFinished()
         {
-            Assert.AreEqual(1, _loggerMock.Logged.Count());
-
-            _testObject.FinishAsyncMethod();
-            while (_loggerMock.Logged.Count() < 4)
-            {
-            }
-
+            Assert.AreEqual(2, _loggerMock.Logged.Count);
             CollectionAssert.Contains(_loggerMock.Logged, $"Leaving method {nameof(ITestObject.AsyncMethod)}");
         }
-
 
         private void ThenAsyncExceptionLogged()
         {
             Assert.IsTrue(_loggerMock.Logged.Last().Contains($"Method {nameof(ITestObject.AsyncMethod)} threw exception"));
         }
-
 
         private static string MethodName => nameof(ITestObject.TestMethod);
     }

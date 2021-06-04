@@ -14,23 +14,23 @@ namespace Decorators
             _decorated = decorated;
         }
 
-        public bool IsFiltered(MethodBase targetMethod)
+        public bool IsFiltered(MethodInfo targetMethod)
         {
-            var implementedTargetMethod = _decorated.GetType().GetMethods().Single(x => SameSignature(x, targetMethod));
-            var attribute = implementedTargetMethod.GetCustomAttributes<NotDecoratedAttribute>();
+            var implementedTargetMethod = _decorated.GetType().GetMethods().Single(x => x.SameMethod(targetMethod));
+            var attributes = implementedTargetMethod.GetCustomAttributes<NotDecoratedAttribute>();
 
-            return attribute.Any(x => x.DecoratorType == null || x.DecoratorType == typeof(T));
+            return attributes.Any(x => x.DecoratorType == null || IsSameTypeIgnoringGenerics(x.DecoratorType));
         }
 
-        private static bool SameSignature(MethodBase a, MethodBase b)
+        //We want to check for if same type as decorator but ignore its generics
+        private static bool IsSameTypeIgnoringGenerics(Type decoratingType)
         {
-            return a.Name.Equals(b.Name) &&
-                   GetParameterTypes(a).SequenceEqual(GetParameterTypes(b));
-        }
+            if (!decoratingType.IsGenericType)
+                return decoratingType == typeof(T);
+            if (!typeof(T).IsGenericType)
+                return false;
 
-        private static IEnumerable<Type> GetParameterTypes(MethodBase methodBase)
-        {
-            return methodBase.GetParameters().Select(x => x.ParameterType);
+            return decoratingType.GetGenericTypeDefinition() == typeof(T).GetGenericTypeDefinition();
         }
     }
 }

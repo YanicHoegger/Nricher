@@ -42,7 +42,7 @@ namespace Decorators
 
                 if (result is Task asyncResult)
                 {
-                    _ = asyncResult.ContinueWith(task =>
+                    result = asyncResult.ContinueWith(task =>
                     {
                         if (task.Exception != null)
                         {
