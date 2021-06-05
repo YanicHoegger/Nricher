@@ -36,6 +36,7 @@ namespace DependencyInjectionExtensions.Tests.HostedService
         private void ThenHostedServiceNotAdded()
         {
             CollectionAssert.IsEmpty(ServiceCollection.Where(x => x.ServiceType != typeof(IObjectUnderTest)));
+            // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
             Assert.That(ServiceCollection.Count(x => x.ServiceType == typeof(IObjectUnderTest)), Is.EqualTo(1));
         }
     }

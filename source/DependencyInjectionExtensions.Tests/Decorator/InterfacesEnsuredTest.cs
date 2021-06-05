@@ -81,7 +81,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
 
         private void WhenAddImplementationFactory()
         {
-            _serviceCollection.AddSingleton<IBaseInterface>(serviceProvider => new Combined());
+            _serviceCollection.AddSingleton<IBaseInterface>(_ => new Combined());
         }
 
         private void WhenAddImplementationType()

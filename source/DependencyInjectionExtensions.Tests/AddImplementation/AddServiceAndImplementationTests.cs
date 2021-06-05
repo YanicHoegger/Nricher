@@ -138,17 +138,17 @@ namespace DependencyInjectionExtensions.Tests.AddImplementation
 
         private void WhenAddSingletonImplementationFactory()
         {
-            _serviceCollection.AddSingleton<IObjectUnderTest, ObjectUnderTest>(serviceProvider => new ObjectUnderTest());
+            _serviceCollection.AddSingleton<IObjectUnderTest, ObjectUnderTest>(_ => new ObjectUnderTest());
         }
 
         private void WhenAddScopedImplementationFactory()
         {
-            _serviceCollection.AddScoped<IObjectUnderTest, ObjectUnderTest>(serviceProvider => new ObjectUnderTest());
+            _serviceCollection.AddScoped<IObjectUnderTest, ObjectUnderTest>(_ => new ObjectUnderTest());
         }
 
         private void WhenAddSingletonImplementationFactoryAsService()
         {
-            _serviceCollection.AddSingleton<IObjectUnderTest>(serviceProvider => new ObjectUnderTest());
+            _serviceCollection.AddSingleton<IObjectUnderTest>(_ => new ObjectUnderTest());
         }
 
         private void ThenImplementationAndInterfaceAreSame()

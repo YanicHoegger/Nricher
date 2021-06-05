@@ -37,8 +37,10 @@ namespace DependencyInjectionExtensions.Tests.AddImplementation
 
         private void ThenImplementationAdded()
         {
+            // ReSharper disable ParameterOnlyUsedForPreconditionCheck.Local
             Assert.That(ServiceCollection.Count(x => x.ServiceType == typeof(IObjectUnderTest)), Is.EqualTo(1));
             Assert.That(ServiceCollection.Count(x => x.ServiceType == typeof(ObjectUnderTest)), Is.EqualTo(1));
+            // ReSharper restore ParameterOnlyUsedForPreconditionCheck.Local
         }
     }
 }

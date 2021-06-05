@@ -129,12 +129,12 @@ namespace DependencyInjectionExtensions.Tests.HostedService
 
         private void WhenAddImplementationFactory()
         {
-            _serviceCollection.AddSingleton(serviceProvider => new HostedObjectUnderTest());
+            _serviceCollection.AddSingleton(_ => new HostedObjectUnderTest());
         }
 
         private void WhenAddImplementationFactoryAsService()
         {
-            _serviceCollection.AddSingleton<IObjectUnderTest, HostedObjectUnderTest>(serviceProvider => new HostedObjectUnderTest());
+            _serviceCollection.AddSingleton<IObjectUnderTest, HostedObjectUnderTest>(_ => new HostedObjectUnderTest());
         }
 
         private void WhenAddHostedService()

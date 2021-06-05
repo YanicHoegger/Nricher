@@ -63,7 +63,7 @@ namespace DependencyInjectionExtensions.Tests
             CreateServiceCollection(new IServiceCollectionExtension[]
             {
                 new HostedServiceExtension(),
-                new NotTransientImplementationExtension(),
+                new NotTransientImplementationExtension()
             });
         }
 

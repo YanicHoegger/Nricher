@@ -146,7 +146,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator
 
         private void WhenAddImplementationFactory()
         {
-            _serviceCollection.AddSingleton<IObjectUnderTest>(serviceProvider => new ObjectUnderTest());
+            _serviceCollection.AddSingleton<IObjectUnderTest>(_ => new ObjectUnderTest());
         }
 
         private void WhenAddType()
