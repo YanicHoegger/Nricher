@@ -76,12 +76,12 @@ namespace Decorators.Tests
 
         private void WhenAddLeaving()
         {
-            ((CommonDecorator<ITestObject>)_testObject).Leave = result => _hasFired = true;
+            ((CommonDecorator<ITestObject>)_testObject).Leave = _ => _hasFired = true;
         }
 
         private void WhenAddException()
         {
-            ((CommonDecorator<ITestObject>)_testObject).Exception = exception => _hasFired = true;
+            ((CommonDecorator<ITestObject>)_testObject).Exception = _ => _hasFired = true;
         }
 
         private static void ThenNoExceptions()
