@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace DynamicTypeHelpers
+namespace Nricher.DynamicTypeHelpers
 {
     //Need to be static since we can not create the same type twice
     public static class DynamicKeepInterfaceTypeCreator

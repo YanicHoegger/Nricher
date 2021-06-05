@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     public static class MethodBaseExtensions
     {

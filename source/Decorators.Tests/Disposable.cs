@@ -1,4 +1,5 @@
 ﻿using System;
+using Nricher.Decorators;
 
 namespace Decorators.Tests
 {

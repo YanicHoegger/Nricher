@@ -1,7 +1,8 @@
 ﻿using System.Linq;
-using DependencyInjectionExtensions.HostedService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nricher.DependencyInjectionExtensions;
+using Nricher.DependencyInjectionExtensions.HostedService;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.HostedService

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using DynamicTypeHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DynamicTypeHelpers;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     public class DecoratorExtension : IServiceCollectionExtension
     {

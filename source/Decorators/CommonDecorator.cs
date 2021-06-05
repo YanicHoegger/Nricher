@@ -2,7 +2,7 @@
 using System.Reflection;
 using JetBrains.Annotations;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     //TODO: Make unit tests
     public class CommonDecorator<T> : DecoratorBase<CommonDecorator<T>>

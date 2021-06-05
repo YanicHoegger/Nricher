@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 
-namespace DynamicTypeHelpers
+namespace Nricher.DynamicTypeHelpers
 {
     public static class ModuleBuilderCreator
     {

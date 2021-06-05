@@ -3,7 +3,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Hosting;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     public class HostedServiceDecorator : DecoratorBase<HostedServiceDecorator>
     {

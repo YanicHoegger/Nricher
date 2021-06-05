@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DependencyInjectionExtensions.HostedService
+namespace Nricher.DependencyInjectionExtensions.HostedService
 {
     /// <summary>
     /// When register a singleton service that implements the <see cref="IHostedService"/> interface,

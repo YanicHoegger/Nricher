@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DynamicTypeHelpers
+namespace Nricher.DynamicTypeHelpers
 {
     public class ListComparer<T> : IEqualityComparer<List<T>>
     {

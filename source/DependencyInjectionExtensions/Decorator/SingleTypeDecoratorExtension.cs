@@ -1,5 +1,5 @@
 ﻿
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     public class SingleTypeDecoratorExtension<TService, TDecorator> : DecoratorExtension
         where TDecorator : notnull, TService

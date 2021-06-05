@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DependencyInjectionExtensions.AddImplementation;
-using DependencyInjectionExtensions.Decorator;
-using DependencyInjectionExtensions.HostedService;
 using DependencyInjectionExtensions.Tests.Decorator;
 using DependencyInjectionExtensions.Tests.HostedService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nricher.DependencyInjectionExtensions;
+using Nricher.DependencyInjectionExtensions.AddImplementation;
+using Nricher.DependencyInjectionExtensions.Decorator;
+using Nricher.DependencyInjectionExtensions.HostedService;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests

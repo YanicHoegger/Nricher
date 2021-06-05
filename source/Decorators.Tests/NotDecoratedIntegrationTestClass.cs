@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Nricher.Decorators;
 
 namespace Decorators.Tests
 {

@@ -2,7 +2,7 @@
 using System.Reflection;
 using JetBrains.Annotations;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     public class DisposableDecorator : DecoratorBase<DisposableDecorator>
     {

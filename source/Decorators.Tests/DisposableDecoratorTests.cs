@@ -1,4 +1,5 @@
 ﻿using System;
+using Nricher.Decorators;
 using NUnit.Framework;
 
 namespace Decorators.Tests

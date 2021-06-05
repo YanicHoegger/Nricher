@@ -1,5 +1,5 @@
 ﻿using System;
-using DependencyInjectionExtensions.Decorator;
+using Nricher.DependencyInjectionExtensions.Decorator;
 
 namespace DependencyInjectionExtensions.Tests.Decorator
 {

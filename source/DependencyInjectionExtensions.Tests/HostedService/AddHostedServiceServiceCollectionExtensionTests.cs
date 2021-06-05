@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DependencyInjectionExtensions.HostedService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nricher.DependencyInjectionExtensions.HostedService;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.HostedService

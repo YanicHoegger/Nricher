@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     [AttributeUsage(AttributeTargets.Method|AttributeTargets.Property)]
     public class NotDecoratedAttribute : Attribute

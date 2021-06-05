@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.Extensions.Hosting;
+using Nricher.Decorators;
 using NUnit.Framework;
 
 namespace Decorators.Tests

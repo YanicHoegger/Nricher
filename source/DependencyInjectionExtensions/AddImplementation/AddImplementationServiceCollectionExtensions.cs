@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions.AddImplementation
+namespace Nricher.DependencyInjectionExtensions.AddImplementation
 {
     public static class AddImplementationServiceCollectionExtensions
     {

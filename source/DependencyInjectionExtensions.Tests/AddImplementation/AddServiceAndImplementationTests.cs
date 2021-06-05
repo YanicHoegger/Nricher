@@ -1,6 +1,7 @@
 ﻿using System.Linq;
-using DependencyInjectionExtensions.AddImplementation;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions;
+using Nricher.DependencyInjectionExtensions.AddImplementation;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.AddImplementation

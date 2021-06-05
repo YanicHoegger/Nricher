@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using DynamicTypeHelpers;
+using Nricher.DynamicTypeHelpers;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     public class DecoratorImplementationFactoryBuilder
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using DynamicTypeHelpers;
 using JetBrains.Annotations;
+using Nricher.DynamicTypeHelpers;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     public abstract class DecoratorBase : DispatchProxy
     {

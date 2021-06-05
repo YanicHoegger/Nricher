@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions
+namespace Nricher.DependencyInjectionExtensions
 {
     public class ServiceCollectionExtender : IServiceCollection
     {

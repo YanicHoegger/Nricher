@@ -1,4 +1,4 @@
-﻿using DependencyInjectionExtensions.Decorator;
+﻿using Nricher.DependencyInjectionExtensions.Decorator;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.Decorator.InterfaceEnsurer

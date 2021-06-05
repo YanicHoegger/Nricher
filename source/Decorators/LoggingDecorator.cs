@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace Decorators
+namespace Nricher.Decorators
 {
     public class LoggingDecorator<T> : DecoratorBase<LoggingDecorator<T>>
         where T : class
