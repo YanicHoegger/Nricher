@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     public interface IDecoratorFactory
     {

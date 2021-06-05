@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using DependencyInjectionExtensions.Decorator;
 using DependencyInjectionExtensions.Tests.Decorator.SingleTypeDecorator;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions.Decorator;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.Decorator

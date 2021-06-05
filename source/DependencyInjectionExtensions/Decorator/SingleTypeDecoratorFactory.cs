@@ -4,7 +4,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     /// <summary>
     /// Use this extension for decorating implementations of a given service type

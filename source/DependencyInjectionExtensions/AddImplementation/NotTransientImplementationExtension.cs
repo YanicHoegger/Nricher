@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions.AddImplementation
+namespace Nricher.DependencyInjectionExtensions.AddImplementation
 {
     /// <summary>
     /// When register a service the implementation is not registered.

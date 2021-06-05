@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Nricher.Decorators;
 using NUnit.Framework;
 
 namespace Decorators.Tests

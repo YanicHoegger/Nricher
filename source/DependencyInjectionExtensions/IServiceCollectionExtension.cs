@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions
+namespace Nricher.DependencyInjectionExtensions
 {
     public interface IServiceCollectionExtension
     {

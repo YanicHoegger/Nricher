@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using DynamicTypeHelpers.Tests.TestClasses;
+using Nricher.DynamicTypeHelpers;
 using NUnit.Framework;
 
 namespace DynamicTypeHelpers.Tests

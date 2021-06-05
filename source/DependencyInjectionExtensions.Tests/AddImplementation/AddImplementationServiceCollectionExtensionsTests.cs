@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DependencyInjectionExtensions.AddImplementation;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions.AddImplementation;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.AddImplementation

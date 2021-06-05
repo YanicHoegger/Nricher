@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DependencyInjectionExtensions.HostedService
+namespace Nricher.DependencyInjectionExtensions.HostedService
 {
     public class ImplementationFactoryBuilder
     {

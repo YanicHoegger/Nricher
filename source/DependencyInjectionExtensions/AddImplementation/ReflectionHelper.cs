@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions.AddImplementation
+namespace Nricher.DependencyInjectionExtensions.AddImplementation
 {
     public static class ReflectionHelper
     {

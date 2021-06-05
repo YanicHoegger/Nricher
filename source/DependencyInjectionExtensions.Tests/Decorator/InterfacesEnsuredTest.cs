@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using DependencyInjectionExtensions.Decorator;
 using DependencyInjectionExtensions.Tests.Decorator.InterfaceEnsurer;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions;
+using Nricher.DependencyInjectionExtensions.Decorator;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.Decorator

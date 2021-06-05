@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace DynamicTypeHelpers
+namespace Nricher.DynamicTypeHelpers
 {
     //Need to be static since we can not create the same type twice
     public static class DynamicInheritedTypeCreator

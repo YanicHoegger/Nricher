@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions;
 
 namespace DependencyInjectionExtensions.Tests
 {

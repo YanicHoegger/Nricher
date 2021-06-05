@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyInjectionExtensions
+namespace Nricher.DependencyInjectionExtensions
 {
     public static class ServiceCollectionHelper
     {

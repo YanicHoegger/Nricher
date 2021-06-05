@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 [assembly: InternalsVisibleTo("DependencyInjectionExtensions.Tests")]
-namespace DependencyInjectionExtensions.Decorator
+namespace Nricher.DependencyInjectionExtensions.Decorator
 {
     public class InterfaceEnsurerDecorator : DispatchProxy
     {

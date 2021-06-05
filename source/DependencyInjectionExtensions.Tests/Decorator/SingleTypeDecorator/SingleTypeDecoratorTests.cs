@@ -1,6 +1,7 @@
 ﻿using System;
-using DependencyInjectionExtensions.Decorator;
 using Microsoft.Extensions.DependencyInjection;
+using Nricher.DependencyInjectionExtensions;
+using Nricher.DependencyInjectionExtensions.Decorator;
 using NUnit.Framework;
 
 namespace DependencyInjectionExtensions.Tests.Decorator.SingleTypeDecorator
