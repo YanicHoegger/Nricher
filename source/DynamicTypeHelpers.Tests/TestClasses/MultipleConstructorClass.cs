@@ -1,5 +1,5 @@
 ﻿
-namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
+namespace DynamicTypeHelpers.Tests.TestClasses
 {
     public class MultipleConstructorClass
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DependencyInjectionExtensions.Decorator
+namespace DynamicTypeHelpers
 {
     public class ListComparer<T> : IEqualityComparer<List<T>>
     {
@@ -14,6 +14,7 @@ namespace DependencyInjectionExtensions.Decorator
                 return false;
             if (y is null) 
                 return false;
+            // ReSharper disable once ConvertIfStatementToReturnStatement
             if (x.GetType() != y.GetType()) 
                 return false;
 

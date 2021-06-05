@@ -1,45 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 
-[assembly: InternalsVisibleTo("DependencyInjectionExtensions.Tests")]
-namespace DependencyInjectionExtensions.Decorator
+namespace DynamicTypeHelpers
 {
     //Need to be static since we can not create the same type twice
-    //We use this to call DispatchProxyGenerator which has a static Dictionary of types
-    internal static class DynamicTypeCreator
+    public static class DynamicInheritedTypeCreator
     {
-        private static readonly ModuleBuilder ModuleBuilder = CreateModuleBuilder();
-        private static readonly Dictionary<List<Type>, Type> AlreadyCreatedInterfaceTypes = new Dictionary<List<Type>, Type>(new ListComparer<Type>());
-        private static readonly Dictionary<Type, Type> AlreadyCreatedInheritanceTypes = new Dictionary<Type, Type>();
-
-        public static Type CreateDynamicInterface(IEnumerable<Type> interfaces, string typeName)
-        {
-            var interfacesList = interfaces.OrderBy(x => x.FullName).ToList();
-
-            if (AlreadyCreatedInterfaceTypes.ContainsKey(interfacesList))
-                return AlreadyCreatedInterfaceTypes[interfacesList];
-
-            var typeBuilder = ModuleBuilder.DefineType($"{typeName}InterfaceProxy",
-                TypeAttributes.Interface | TypeAttributes.Abstract | TypeAttributes.Public);
-
-            foreach (var @interface in interfacesList)
-            {
-                typeBuilder.AddInterfaceImplementation(@interface);
-            }
-
-            var dynamicInterface = typeBuilder.CreateType();
-            Debug.Assert(dynamicInterface != null, nameof(dynamicInterface) + " != null");
-
-            AlreadyCreatedInterfaceTypes[interfacesList] = dynamicInterface;
-
-            return dynamicInterface;
-        }
+        //TODO: Needs a lock for multi threading
+        private static readonly Dictionary<Type, Type> AlreadyCreatedInheritanceTypes = new();
 
         public static Type CreateInheritedType([NotNull] Type type)
         {
@@ -48,7 +21,7 @@ namespace DependencyInjectionExtensions.Decorator
             if (AlreadyCreatedInheritanceTypes.ContainsKey(type))
                 return AlreadyCreatedInheritanceTypes[type];
 
-            var typeBuilder = ModuleBuilder.DefineType($"{type.Name}InheritanceProxy",TypeAttributes.Class | TypeAttributes.Public, type);
+            var typeBuilder = ModuleBuilderCreator.ModuleBuilder.DefineType($"{type.Name}InheritanceProxy", TypeAttributes.Class | TypeAttributes.Public, type);
 
             DefineConstructor(typeBuilder, type);
 
@@ -100,15 +73,6 @@ namespace DependencyInjectionExtensions.Decorator
                 throw new ArgumentException($"Type {type.Name} can not have multiple public constructors");
 
             return constructors.Single(x => x.IsPublic);
-        }
-
-        private static ModuleBuilder CreateModuleBuilder()
-        {
-            var currentAssemblyName = typeof(DynamicTypeCreator).Assembly.GetName().Name;
-            var assemblyName = new AssemblyName($"{currentAssemblyName}Proxies");
-            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-
-            return assemblyBuilder.DefineDynamicModule($"{assemblyName}ModuleBuilder");
         }
     }
 }

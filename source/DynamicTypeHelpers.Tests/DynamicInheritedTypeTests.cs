@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
+using DynamicTypeHelpers.Tests.TestClasses;
 using NUnit.Framework;
 
-namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
+namespace DynamicTypeHelpers.Tests
 {
     public class DynamicInheritedTypeTests
     {
@@ -58,6 +59,8 @@ namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
             ThenMultipleParameterConstructorCanBeActivated();
         }
 
+        //TODO: Create same type twice test
+
         private Type _originalType;
         private Type _createdType;
 
@@ -98,7 +101,7 @@ namespace DependencyInjectionExtensions.Tests.Decorator.DynamicTypeCreator
 
         private void WhenCreate()
         {
-            _createdType = DependencyInjectionExtensions.Decorator.DynamicTypeCreator.CreateInheritedType(_originalType);
+            _createdType = DynamicInheritedTypeCreator.CreateInheritedType(_originalType);
         }
 
         private void WhenCreateThenThrow()

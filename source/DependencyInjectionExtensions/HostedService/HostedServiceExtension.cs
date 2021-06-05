@@ -26,7 +26,7 @@ namespace DependencyInjectionExtensions.HostedService
             if (!IsHostedService(implementationType)) 
                 return;
 
-            var hostedServiceDescriptor = CreateImplementationFactoryServiceDescriptor(serviceDescriptor, implementationType, serviceCollection);
+            var hostedServiceDescriptor = CreateImplementationFactoryServiceDescriptor(serviceDescriptor, serviceCollection);
             serviceCollection.Add(hostedServiceDescriptor);
         }
 
@@ -35,9 +35,7 @@ namespace DependencyInjectionExtensions.HostedService
             return _hostedServiceType.IsAssignableFrom(type);
         }
 
-        private ServiceDescriptor CreateImplementationFactoryServiceDescriptor(ServiceDescriptor serviceDescriptor,
-            Type type, 
-            IServiceCollection serviceCollection)
+        private ServiceDescriptor CreateImplementationFactoryServiceDescriptor(ServiceDescriptor serviceDescriptor, IServiceCollection serviceCollection)
         {
             var implementationFactoryBuilder = new ImplementationFactoryBuilder(serviceDescriptor.ServiceType, serviceCollection);
             var factory = implementationFactoryBuilder.CreateImplementationFactory();
