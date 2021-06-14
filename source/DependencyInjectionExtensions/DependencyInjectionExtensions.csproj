@@ -9,7 +9,6 @@
 
 	<PropertyGroup>
 		<Authors>Yanic Högger</Authors>
-		<Version>0.1.1</Version>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<RepositoryUrl>https://github.com/YanicHoegger/Nricher</RepositoryUrl>
 		<PackageTags>Nricher;di;ioc;dependencyInjection</PackageTags>
