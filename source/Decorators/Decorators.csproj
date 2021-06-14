@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>0.1.1</Version>
 		<Authors>Yanic Högger</Authors>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<Description>
