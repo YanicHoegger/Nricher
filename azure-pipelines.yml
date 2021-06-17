@@ -9,6 +9,8 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+name: '$(GitVersion.SemVer)'
+
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
@@ -37,5 +39,3 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-name: 'GitVersion.SemVar'
