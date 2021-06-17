@@ -9,13 +9,10 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-name: '$(GitVersion.SemVer)'
-
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  GitVersion.SemVer: ''
 
 steps:
 - task: NuGetToolInstaller@1
@@ -26,18 +23,19 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    command: pack
     restoreSolution: '$(solution)'
+
+- task: gitversion/execute@0
+  displayName: Determine Version
+
+- script: |
+    echo Major: $(GitVersion.Major)
 
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-- task: gitversion/execute@0
-  inputs:
-    updateAssemblyInfo: true
 
 - task: VSTest@2
   inputs:
