@@ -23,6 +23,7 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
+    command: pack
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
@@ -35,3 +36,5 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+name: $(GitVersion.SemVar)
