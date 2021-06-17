@@ -35,6 +35,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: gitversion/execute@0
+  inputs:
+    updateAssemblyInfo: true
+
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
