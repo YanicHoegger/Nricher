@@ -13,6 +13,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 
 steps:
 - task: NuGetToolInstaller@1
@@ -37,4 +38,4 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-name: '$(GitVersion.SemVar)'
+name: 'GitVersion.SemVar'
