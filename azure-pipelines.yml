@@ -37,4 +37,4 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-name: $(GitVersion.SemVar)
+name: '$(GitVersion.SemVar)'
