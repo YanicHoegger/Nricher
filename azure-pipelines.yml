@@ -21,15 +21,12 @@ steps:
   inputs:
     versionSpec: '5.x'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
 - task: gitversion/execute@0
   displayName: Determine Version
 
-- script: |
-    echo Major: $(GitVersion.Major)
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
 - task: VSBuild@1
   inputs:
@@ -41,3 +38,5 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+name: '$(GitVersion.SemVer)'
