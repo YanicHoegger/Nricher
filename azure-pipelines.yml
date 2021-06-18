@@ -39,4 +39,21 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: NuGetCommand@2
+  displayName: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: 'source/DependencyInjectionExtensions/DependencyInjectionExtensions.csproj;source/Decorators/Decorators.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: GitVersion.NuGetVersion
+    restoreSolution: '$(solution)'
+    includeSymbols: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish the package'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
 name: '$(GitVersion.SemVer)'
