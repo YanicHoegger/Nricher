@@ -51,7 +51,7 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Pipeline.Workspace)/Packed'
+    targetPath: '$(Pipeline.Workspace)'
     publishLocation: 'pipeline'
     artifact: '$(GitVersion.SemVer)'
 
