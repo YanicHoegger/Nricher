@@ -39,4 +39,19 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: NuGetCommand@2
+  displayName: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: 'source/DependencyInjectionExtensions/DependencyInjectionExtensions.csproj;source/Decorators/Decorators.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: GitVersion.NuGetVersion
+    restoreSolution: '$(solution)'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)'
+    publishLocation: 'pipeline'
+    artifact: '$(GitVersion.SemVer)'
+
 name: '$(GitVersion.SemVer)'
