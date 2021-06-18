@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 trigger:
-- develop
+- master
 
 pool:
   vmImage: 'windows-latest'
@@ -15,14 +15,16 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
-
 - task: gitversion/setup@0
   inputs:
     versionSpec: '5.x'
 
 - task: gitversion/execute@0
   displayName: Determine Version
+  inputs:
+     updateAssemblyInfo: true
+
+- task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
@@ -34,9 +36,24 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: NuGetCommand@2
+  displayName: Pack
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'pack'
+    packagesToPack: 'source/DependencyInjectionExtensions/DependencyInjectionExtensions.csproj;source/Decorators/Decorators.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: GitVersion.NuGetVersion
+    restoreSolution: '$(solution)'
 
-name: '$(GitVersion.SemVer)'
+- task: NuGetAuthenticate@0
+  displayName: 'NuGet Authenticate'
+  inputs:
+    nuGetServiceConnections: 'NuGet.org feed'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet Push'
+  inputs:
+    command: push
+    nuGetFeedType: external
+    versioningScheme: byEnvVar
+    versionEnvVar: GitVersion.NuGetVersion
