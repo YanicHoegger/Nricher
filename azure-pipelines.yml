@@ -49,10 +49,11 @@ steps:
     restoreSolution: '$(solution)'
     includeSymbols: true
 
-- task: PublishPipelineArtifact@1
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish the package'
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    publishLocation: 'pipeline'
-    artifact: '$(GitVersion.SemVer)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 
 name: '$(GitVersion.SemVer)'
