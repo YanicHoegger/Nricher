@@ -49,9 +49,10 @@ steps:
     restoreSolution: '$(solution)'
     includeSymbols: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish the package'
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    command: push
+    packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'NuGet.org feed'
