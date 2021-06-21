@@ -46,16 +46,11 @@ steps:
     versioningScheme: byEnvVar
     versionEnvVar: GitVersion.NuGetVersion
     restoreSolution: '$(solution)'
+    includeSymbols: true
 
-- task: NuGetAuthenticate@0
-  displayName: 'NuGet Authenticate'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish the package'
   inputs:
-    nuGetServiceConnections: 'NuGet.org feed'
-
-- task: NuGetCommand@2
-  displayName: 'NuGet Push'
-  inputs:
-    command: push
-    nuGetFeedType: external
-    versioningScheme: byEnvVar
-    versionEnvVar: GitVersion.NuGetVersion
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
