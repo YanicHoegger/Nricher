@@ -40,21 +40,4 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: NuGetCommand@2
-  displayName: Pack
-  inputs:
-    command: 'pack'
-    packagesToPack: 'source/DependencyInjectionExtensions/DependencyInjectionExtensions.csproj;source/Decorators/Decorators.csproj'
-    versioningScheme: byEnvVar
-    versionEnvVar: GitVersion.NuGetVersion
-    restoreSolution: '$(solution)'
-    includeSymbols: true
-
-- task: NuGetCommand@2
-  displayName: 'NuGet push'
-  inputs:
-    command: push
-    nuGetFeedType: external
-    publishFeedCredentials: 'NuGet.org feed'
-
 name: '$(GitVersion.SemVer)'
