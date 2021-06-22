@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-      - master
+      - test
 pr: none
 
 pool:
