@@ -1,0 +1,61 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger:
+  branches:
+    include:
+      - master
+pr: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: gitversion/setup@0
+  inputs:
+    versionSpec: '5.x'
+
+- task: gitversion/execute@0
+  displayName: Determine Version
+  inputs:
+     updateAssemblyInfo: true
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: 'source/DependencyInjectionExtensions/DependencyInjectionExtensions.csproj;source/Decorators/Decorators.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: GitVersion.NuGetVersion
+    restoreSolution: '$(solution)'
+    includeSymbols: true
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: push
+    packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg;!$(System.ArtifactsDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'NuGet.org feed'
+
+
+name: '$(GitVersion.SemVer)'
